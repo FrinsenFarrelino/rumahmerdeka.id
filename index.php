@@ -59,8 +59,8 @@
         .card { 
             background-color: white;
             border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            padding: 2rem 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
             transition: transform 300ms;
         }
         .card:hover {
@@ -106,13 +106,37 @@
             z-index: 2000;
         }
         
-        /* CSS untuk slider halus */
-        .slider-track {
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        /* CSS untuk slider testimoni baru */
+        #testimonial-slider {
+            touch-action: pan-y; /* Izinkan scroll vertikal di area slider */
+        }
+        .grabbing {
+            cursor: grabbing;
+            cursor: -webkit-grabbing;
+        }
+        .testimonial-slide {
+            box-sizing: border-box;
+            display: flex; /* Membuat slide menjadi flex container */
+            align-items: center; /* Vertically center content */
+            min-height: 480px; /* Menetapkan tinggi minimum untuk konsistensi */
+        }
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #cbd5e1; /* slate-300 */
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .slider-dot.active {
+            background-color: #c9184a; /* Warna utama baru */
+            transform: scale(1.25);
         }
     </style>
 </head>
-<!-- Google tag (gtag.js) -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RFY58PMMBJ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -142,27 +166,106 @@
         <section id="kenapa-harus" class="py-20 bg-white"><div class="container mx-auto px-6"><div class="text-center mb-12"><h2 class="text-xl sm:text-3xl lg:text-4xl font-bold mb-2">Capek Nge-kost? Saatnya <span class="text-red-600">#MerdekaPunyaRumah!</span></h2><p class="text-gray-600 max-w-2xl mx-auto">Lupakan cicilan mahal dan DP yang bikin pusing. RUMAH MERDEKA memberikan solusi nyata untuk kamu yang masih ngekost/kontrak/nebeng di rumah mertua.</p><p class="mt-2 text-red-600 max-w-2xl mx-auto text-bold"><strong>#ModalMAUaja #ModalNIATbaik</strong></p></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"><div class="card text-center"><div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"><i data-lucide="wallet" class="w-8 h-8 text-red-600"></i></div><h3 class="text-xl font-bold mb-2">DP 0% alias TANPA DP</h3><p class="text-gray-600">Betul, kamu tidak salah baca. Langsung pilih unit tanpa pusing mikirin uang muka dan biaya - biaya!</p></div><div class="card text-center"><div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"><i data-lucide="trending-down" class="w-8 h-8 text-red-600"></i></div><h3 class="text-xl font-bold mb-2">Cicilan Super Ringan</h3><p class="text-gray-600">Angsuran KPR subsidi yang <strong>flat sampai lunas</strong>, lebih ringan dari cicilan motor. Angsuran Rp. 1.072.000.</p></div><div class="card text-center"><div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"><i data-lucide="rocket" class="w-8 h-8 text-red-600"></i></div><h3 class="text-xl font-bold mb-2">Proses Anti Ribet</h3><p class="text-gray-600">Dengan BI Checking Instan dan pendampingan penuh, proses jadi sat-set-sat-set!</p></div><div class="card text-center"><div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"><i data-lucide="shield-check" class="w-8 h-8 text-red-600"></i></div><h3 class="text-xl font-bold mb-2">Didukung Pemerintah</h3><p class="text-gray-600">Program ini adalah kolaborasi resmi berbagai pihak untuk kesejahteraan pekerja.</p></div></div></div></section>
         <section id="penawaran-terbatas" class="py-20 hero-gradient text-white"><div class="container mx-auto px-6 text-center"><i data-lucide="clock" class="w-16 h-16 mx-auto mb-4"></i><h2 class="text-3xl md:text-4xl font-bold mb-4">Jangan Sampai Ketinggalan!</h2><p class="text-lg max-w-3xl mx-auto mb-8">Penawaran EKSKLUSIF ini hanya berlaku hingga Senin, 4 Agustus. Amankan unitmu sebelum kuota habis!</p><div id="countdown" class="grid grid-cols-4 gap-4 max-w-2xl mx-auto"><div class="countdown-box"><span id="days" class="countdown-number">00</span><br><span class="countdown-label">Hari</span></div><div class="countdown-box"><span id="hours" class="countdown-number">00</span><br><span class="countdown-label">Jam</span></div><div class="countdown-box"><span id="minutes" class="countdown-number">00</span><br><span class="countdown-label">Menit</span></div><div class="countdown-box"><span id="seconds" class="countdown-number">00</span><br><span class="countdown-label">Detik</span></div></div><br><br><video width="100%" controls class="rounded-lg shadow-lg"><source src="assets/video/video.mp4" type="video/mp4">Your browser does not support the video tag.</video></div></section>
         
-        <section id="kisah-sukses" class="py-20"><div class="container mx-auto px-6"><div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold mb-2">Dari Kontrakan ke Rumah Impian</h2><p class="text-gray-600 max-w-2xl mx-auto">Lihat bagaimana program ini mengubah hidup para pekerja seperti kamu.</p></div>
-            <div id="testimonial-slider" class="relative max-w-4xl mx-auto">
-                <div class="overflow-hidden relative rounded-xl">
-                    <div id="slider-track" class="flex slider-track">
+        <section id="kisah-sukses" class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2 text-gray-800">Dari Kontrakan ke Rumah Impian</h2>
+                    <p class="text-gray-600 max-w-3xl mx-auto">Lihat bagaimana program ini mengubah hidup para pekerja seperti kamu. Geser untuk melihat kisah lainnya.</p>
+                </div>
+            </div>
+
+            <div id="testimonial-slider" class="relative max-w-6xl mx-auto">
+                <div class="overflow-hidden rounded-2xl shadow-lg bg-white">
+                    <div id="slider-track" class="flex">
+                        
                         <!-- Slide 1 -->
-                        <div class="testimonial-slide card md:flex items-center gap-8 w-full flex-shrink-0 p-6">
-                            <div class="md:w-1/2 mb-6 md:mb-0"><img src="assets/images/testimonial.jpg" alt="Foto Sultan Hamsah dan keluarga" class="rounded-xl shadow-lg w-full h-auto"></div>
-                            <div class="md:w-1/2"><p class="text-gray-500 mb-4 text-lg">"Dulu tiap tahun pusing pindah kontrakan, sekarang alhamdulillah bisa pulang ke rumah sendiri. Rasanya tenang banget. Anak-istri juga happy. Terima kasih RUMAH MERDEKA!"</p><p class="font-bold text-xl">Sultan Hamsah</p><p class="text-red-600 font-semibold">Pekerja & Pemilik Rumah Baru</p></div>
+                        <div class="testimonial-slide w-full flex-shrink-0">
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 p-8 md:p-12 w-full">
+                                <!-- Image Container -->
+                                <div class="w-full md:w-1/3 flex-shrink-0 flex justify-center items-center">
+                                    <img src="assets/images/testimonial.jpg" alt="Foto Sultan Hamsah dan keluarga" class="object-contain max-h-80 rounded-2xl shadow-lg">
+                                </div>
+                                <!-- Text Container -->
+                                <div class="md:w-2/3 text-center md:text-left">
+                                    <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>
+                                    <blockquote class="text-lg md:text-xl text-gray-600 italic leading-relaxed">
+                                        "Dulu tiap tahun pusing pindah kontrakan, sekarang alhamdulillah bisa pulang ke rumah sendiri. Rasanya tenang banget. Anak-istri juga happy. Terima kasih RUMAH MERDEKA!"
+                                    </blockquote>
+                                    <div class="mt-6">
+                                        <p class="font-bold text-lg text-red-600">Sultan Hamsah</p>
+                                        <p class="text-gray-500">Pekerja & Pemilik Rumah Baru</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <!-- Slide 2 -->
-                        <div class="testimonial-slide card md:flex items-center gap-8 w-full flex-shrink-0 p-6">
-                            <div class="md:w-1/2 mb-6 md:mb-0"><img src="assets/images/testimonial2.jpg" alt="Foto Siti Aminah di depan rumah barunya" class="rounded-xl shadow-lg w-full h-auto"></div>
-                            <div class="md:w-1/2"><p class="text-gray-500 mb-4 text-lg">"Gokil! Ternyata Sat Set Banget! Rumah impian akhirnya jadi kenyataan! ✨Dulu boro-boro ngajak kumpul keluarga, di rumah ortu yang sepetak, tiap ada tamu kudu gulung kasur dulu. Sempit, cuy! Sekarang? Speechless. Program RUMAH MERDEKA prosesnya cuma 2 HARI dari pemberkasan sampe serah terima kunci. Gak pake ribet! Perumahan Grand Citeras emang the best: <br>✅ Akses jalan lebar <br>✅ Cuma 5 menit ke stasiun (auto jadi anak kereta dong!) <br>✅ Fasilitasnya Kids Friendly banget <br>✅ Legalitasnya sudah sertipikat, jadi tenang deh <br>✅ Keamanan 24jam, serasa di perumahan elit <br>✅ Developernya ramah & helpful banget <br>Highly recommended!"</p><p class="font-bold text-xl">Reni Yolanda</p><p class="text-red-600 font-semibold">Karyawati Pabrik & Pemilik Rumah Baru</p></div>
+                        <div class="testimonial-slide w-full flex-shrink-0">
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 p-8 md:p-12 w-full">
+                                <!-- Image Container -->
+                                <div class="w-full md:w-1/3 flex-shrink-0 order-first md:order-last flex justify-center items-center">
+                                     <img src="assets/images/testimonial2.jpg" alt="Foto Reni Yolanda di depan rumah barunya" class="object-contain max-h-80 rounded-2xl shadow-lg">
+                                </div>
+                                <!-- Text Container -->
+                                <div class="md:w-2/3 text-center md:text-left">
+                                    <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>
+                                    <blockquote class="text-gray-600 italic">
+                                        <p class="text-lg leading-relaxed">"Gokil! Ternyata Sat Set Banget! Rumah impian akhirnya jadi kenyataan! ✨ Dulu boro-boro ngajak kumpul keluarga, di rumah ortu yang sepetak, tiap ada tamu kudu gulung kasur dulu. Sempit, cuy! Sekarang? Speechless. Program RUMAH MERDEKA prosesnya cuma 2 HARI dari pemberkasan sampe serah terima kunci. Gak pake ribet!"</p>
+                                        <div class="mt-4 text-left text-base not-italic">
+                                             <p class="text-gray-700 font-medium">Perumahan Grand Citeras emang the best:</p>
+                                             <ul class="list-none space-y-1 mt-2 text-gray-600">
+                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Akses jalan lebar</span></li>
+                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Cuma 5 menit ke stasiun (auto jadi anak kereta dong!)</span></li>
+                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Fasilitasnya Kids Friendly banget</span></li>
+                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Legalitasnya sudah sertipikat, jadi tenang deh</span></li>
+                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Keamanan 24jam, serasa di perumahan elit</span></li>
+                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Developernya ramah & helpful banget</span></li>
+                                             </ul>
+                                        </div>
+                                         <p class="text-lg leading-relaxed mt-4 font-semibold">Highly recommended!</p>
+                                    </blockquote>
+                                    <div class="mt-6">
+                                        <p class="font-bold text-lg text-red-600">Reni Yolanda</p>
+                                        <p class="text-gray-500">Karyawati Pabrik & Pemilik Rumah Baru</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Slide 3 -->
+                        <!-- <div class="testimonial-slide w-full flex-shrink-0">
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 p-8 md:p-12 w-full">
+                                <div class="w-full md:w-1/3 flex-shrink-0 flex justify-center items-center">
+                                    <img src="https://placehold.co/400x400/e2e8f0/64748b?text=Budi" alt="Foto Budi Santoso" class="object-contain max-h-80 rounded-2xl shadow-lg">
+                                </div>
+                                <div class="md:w-2/3 text-center md:text-left">
+                                    <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>
+                                    <blockquote class="text-lg md:text-xl text-gray-600 italic leading-relaxed">
+                                        "Solusi untuk saudara-saudara yang mungkin terhalang pandemi. Prosesnya sangat mudah dan dibantu sampai serah terima kunci. Sangat direkomendasikan!"
+                                    </blockquote>
+                                    <div class="mt-6">
+                                        <p class="font-bold text-lg text-red-600">Budi Santoso</p>
+                                        <p class="text-gray-500">Driver Ojek Online</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
                     </div>
                 </div>
-                <!-- Navigation -->
-                <button id="prev-slide" class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-4 md:-translate-x-12 bg-white/50 hover:bg-white rounded-full p-2 shadow-md transition z-10"><i data-lucide="chevron-left" class="w-6 h-6 text-gray-700"></i></button>
-                <button id="next-slide" class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-4 md:translate-x-12 bg-white/50 hover:bg-white rounded-full p-2 shadow-md transition z-10"><i data-lucide="chevron-right" class="w-6 h-6 text-gray-700"></i></button>
+
+                <!-- Navigation Arrows -->
+                <button id="prev-slide" aria-label="Previous Slide" class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition z-10 hidden md:flex items-center justify-center">
+                    <i data-lucide="chevron-left" class="w-6 h-6 text-gray-700"></i>
+                </button>
+                <button id="next-slide" aria-label="Next Slide" class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition z-10 hidden md:flex items-center justify-center">
+                    <i data-lucide="chevron-right" class="w-6 h-6 text-gray-700"></i>
+                </button>
+
+                <!-- Dot Navigation -->
+                <div id="slider-dots" class="flex justify-center gap-3 mt-6"></div>
             </div>
-        </div></section>
+        </section>
 
         <section class="py-20 bg-gray-50 text-center"><div class="container mx-auto px-6"><h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Siap Mengambil Langkah Pertama?</h2><p class="text-gray-600 max-w-2xl mx-auto mb-8">Jangan tunda lagi mimpimu. Kuota terbatas dan waktu terus berjalan. Daftar sekarang juga!</p><a href="#pendaftaran" id="saya-mau-daftar-btn" class="btn-cta text-lg show-form-trigger">SAYA MAU DAFTAR <i data-lucide="home" class="inline-block ml-2 w-5 h-5"></i></a></div></section>
         <section class="py-12 bg-white"><div class="container mx-auto px-6"><h3 class="text-center text-gray-500 font-semibold uppercase tracking-widest mb-8">Didukung Penuh Oleh</h3><div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-6"><img src="assets/images/2.png" alt="Logo KEMNAKER" class="h-10 opacity-60 hover:opacity-100 transition"><img src="assets/images/3.png" alt="Logo Kementerian PUPR" class="h-10 opacity-60 hover:opacity-100 transition"><img src="assets/images/5.png" alt="Logo BP TAPERA" class="h-10 opacity-60 hover:opacity-100 transition"><img src="assets/images/6.png" alt="Logo Bank BTN" class="h-12 opacity-60 hover:opacity-100 transition"><img src="assets/images/7.png" alt="Logo Grand Citeras" class="h-12 opacity-60 hover:opacity-100 transition"></div></div></section>
@@ -226,7 +329,6 @@
         </a>
     </div>
 
-    <!-- Modal Sukses -->
     <div id="successModal" class="modal-overlay bg-black/60 flex items-center justify-center p-4 transition-opacity duration-300 hidden opacity-0">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center transform scale-95 transition-transform duration-300">
             <div class="w-24 h-24 mx-auto mb-6">

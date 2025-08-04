@@ -193,11 +193,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Testimonial Slider Logic (Endless Loop with Arrows) ---
+    // --- Testimonial Slider Logic (New: with touch/drag and dots) ---
     const slider = document.getElementById('testimonial-slider');
     if (slider) {
         const track = document.getElementById('slider-track');
         const slides = Array.from(track.children);
+        const dotsContainer = document.getElementById('slider-dots');
         const nextBtn = document.getElementById('next-slide');
         const prevBtn = document.getElementById('prev-slide');
         
@@ -206,45 +207,125 @@ document.addEventListener('DOMContentLoaded', function () {
             let slideInterval;
             const slideDuration = 5000; // 5 detik
 
-            const updateSlidePosition = () => {
-                track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+            let isDragging = false,
+                startPos = 0,
+                currentTranslate = 0,
+                prevTranslate = 0,
+                animationID;
+
+            const getSlideWidth = () => slides[0].getBoundingClientRect().width;
+
+            const showSlide = (index, smooth = true) => {
+                currentSlideIndex = (index + slides.length) % slides.length;
+                const slideWidth = getSlideWidth();
+                currentTranslate = -currentSlideIndex * slideWidth;
+                prevTranslate = currentTranslate;
+                
+                track.style.transition = smooth ? 'transform 0.5s ease-in-out' : 'none';
+                setSlidePosition();
+                updateDots();
+                startSlideShow(); // Restart autoplay timer
             };
             
-            const showSlide = (index) => {
-                // The modulo operator creates the endless loop effect
-                currentSlideIndex = (index + slides.length) % slides.length;
-                updateSlidePosition();
+            const setSlidePosition = () => {
+                track.style.transform = `translateX(${currentTranslate}px)`;
             };
 
-            const next = () => {
-                showSlide(currentSlideIndex + 1);
+            const updateDots = () => {
+                if (!dotsContainer) return;
+                dotsContainer.innerHTML = '';
+                slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('slider-dot');
+                    if (i === currentSlideIndex) dot.classList.add('active');
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => showSlide(i));
+                    dotsContainer.appendChild(dot);
+                });
             };
 
-            const prev = () => {
-                showSlide(currentSlideIndex - 1);
-            };
+            const next = () => showSlide(currentSlideIndex + 1);
+            const prev = () => showSlide(currentSlideIndex - 1);
 
             const startSlideShow = () => {
                 clearInterval(slideInterval);
                 slideInterval = setInterval(next, slideDuration);
             };
 
-            nextBtn.addEventListener('click', () => {
-                next();
-                startSlideShow(); // Restart interval on manual click
-            });
+            // Event Listeners for buttons
+            nextBtn.addEventListener('click', next);
+            prevBtn.addEventListener('click', prev);
 
-            prevBtn.addEventListener('click', () => {
-                prev();
-                startSlideShow(); // Restart interval on manual click
-            });
+            // Pause on hover
+            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+            slider.addEventListener('mouseleave', startSlideShow);
 
-            // Initialize slider
-            startSlideShow();
+            // Touch/Drag events
+            const getPositionX = (event) => event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+
+            const touchStart = (index) => (event) => {
+                currentSlideIndex = index;
+                startPos = getPositionX(event);
+                isDragging = true;
+                animationID = requestAnimationFrame(animation);
+                track.style.transition = 'none';
+                slider.classList.add('grabbing');
+                clearInterval(slideInterval); // Pause autoplay during drag
+            };
+
+            const touchMove = (event) => {
+                if (isDragging) {
+                    const currentPosition = getPositionX(event);
+                    currentTranslate = prevTranslate + currentPosition - startPos;
+                }
+            };
+
+            const touchEnd = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                cancelAnimationFrame(animationID);
+                
+                const movedBy = currentTranslate - prevTranslate;
+                const slideWidth = getSlideWidth();
+
+                if (movedBy < -slideWidth / 4) next();
+                else if (movedBy > slideWidth / 4) prev();
+                else showSlide(currentSlideIndex);
+
+                slider.classList.remove('grabbing');
+            };
+            
+            function animation() {
+                setSlidePosition();
+                if (isDragging) requestAnimationFrame(animation);
+            }
+
+            slides.forEach((slide, index) => {
+                const slideImage = slide.querySelector('img');
+                if (slideImage) slideImage.addEventListener('dragstart', (e) => e.preventDefault());
+                
+                // Touch events
+                slide.addEventListener('touchstart', touchStart(index));
+                slide.addEventListener('touchend', touchEnd);
+                slide.addEventListener('touchmove', touchMove);
+
+                // Mouse events
+                slide.addEventListener('mousedown', touchStart(index));
+                slide.addEventListener('mouseup', touchEnd);
+                slide.addEventListener('mouseleave', touchEnd);
+                slide.addEventListener('mousemove', touchMove);
+            });
+            
+            // Window resize handler
+            window.addEventListener('resize', () => showSlide(currentSlideIndex, false));
+
+            // Initialize
+            showSlide(0, false);
         } else {
-            // If only one slide, hide navigation
-            if(nextBtn) nextBtn.style.display = 'none';
-            if(prevBtn) prevBtn.style.display = 'none';
+            // Hide controls if only one slide
+            nextBtn.style.display = 'none';
+            prevBtn.style.display = 'none';
+            if (dotsContainer) dotsContainer.style.display = 'none';
         }
     }
 });
