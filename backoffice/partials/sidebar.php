@@ -13,7 +13,7 @@
             <i data-lucide="users" class="w-5 h-5 mr-3"></i> Peserta
         </a>
         <a href="dashboard.php?page=counters" class="flex items-center px-8 py-3 hover:bg-gray-700">
-            <i data-lucide="mouse-pointer-click" class="w-5 h-5 mr-3"></i> Penghitung
+            <i data-lucide="mouse-pointer-click" class="w-5 h-5 mr-3"></i> Counter
         </a>
         <a href="logout.php" class="flex items-center px-8 py-3 mt-4 text-red-400 hover:bg-gray-700">
             <i data-lucide="log-out" class="w-5 h-5 mr-3"></i> Logout
