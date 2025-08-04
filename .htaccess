@@ -1,0 +1,12 @@
+# Mencegah listing isi direktori
+Options -Indexes
+
+# Aturan keamanan dasar
+<Files .*.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+<FilesMatch "^(config\.php|database\.sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
