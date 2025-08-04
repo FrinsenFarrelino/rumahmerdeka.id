@@ -5,6 +5,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
+date_default_timezone_set('Asia/Jakarta');
+
 // Mengambil data dari file API
 require_once 'api/get_participants.php';
 require_once '../vendor/tcpdf/tcpdf.php';
