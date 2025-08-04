@@ -5,7 +5,8 @@ require_once 'api/get_counters.php';
 $button_map = [
     'daftar_sekarang_btn' => ['label' => 'Tombol "Daftar Sekarang" (Hero)', 'icon' => 'arrow-right-circle'],
     'saya_mau_daftar_btn' => ['label' => 'Tombol "Saya Mau Daftar"', 'icon' => 'home'],
-    'submitBtn' => ['label' => 'Tombol "Kirim Pendaftaran"', 'icon' => 'send']
+    // 'submitBtn' => ['label' => 'Tombol "Kirim Pendaftaran"', 'icon' => 'send']
+    'tes' => ['label' => 'Tombol "Kirim Pendaftaran"', 'icon' => 'send']
 ];
 ?>
 
@@ -19,7 +20,7 @@ $button_map = [
         </div>
         <div>
             <p class="text-gray-500 text-sm"><?php echo $details['label']; ?></p>
-            <p class="text-3xl font-bold text-gray-800"><?php echo $counters[$id] ?? 0; ?></p>
+            <p class="text-3xl font-bold text-gray-800"><?php echo $counters[$id] ?? '-'; ?></p>
         </div>
     </div>
     <?php endforeach; ?>
