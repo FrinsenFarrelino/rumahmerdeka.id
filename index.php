@@ -118,7 +118,7 @@
             box-sizing: border-box;
             display: flex; /* Membuat slide menjadi flex container */
             align-items: center; /* Vertically center content */
-            min-height: 480px; /* Menetapkan tinggi minimum untuk konsistensi */
+            min-height: 420px; /* Menetapkan tinggi minimum untuk konsistensi */
         }
         .slider-dot {
             width: 12px;
@@ -180,10 +180,10 @@
                         
                         <!-- Slide 1 -->
                         <div class="testimonial-slide w-full flex-shrink-0">
-                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 p-8 md:p-12 w-full">
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 p-6 md:p-8 w-full">
                                 <!-- Image Container -->
-                                <div class="w-full md:w-1/3 flex-shrink-0 flex justify-center items-center">
-                                    <img src="assets/images/testimonial.jpg" alt="Foto Sultan Hamsah dan keluarga" class="object-contain max-h-80 rounded-2xl shadow-lg">
+                                <div class="w-48 h-36 md:w-64 md:h-48 flex-shrink-0">
+                                    <img src="assets/images/testimonial.jpg" alt="Foto Sultan Hamsah dan keluarga" class="object-cover w-full h-full rounded-2xl shadow-lg">
                                 </div>
                                 <!-- Text Container -->
                                 <div class="md:w-2/3 text-center md:text-left">
@@ -201,10 +201,10 @@
 
                         <!-- Slide 2 -->
                         <div class="testimonial-slide w-full flex-shrink-0">
-                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 p-8 md:p-12 w-full">
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 p-6 md:p-8 w-full">
                                 <!-- Image Container -->
-                                <div class="w-full md:w-1/3 flex-shrink-0 order-first md:order-last flex justify-center items-center">
-                                     <img src="assets/images/testimonial2.jpg" alt="Foto Reni Yolanda di depan rumah barunya" class="object-contain max-h-80 rounded-2xl shadow-lg">
+                                <div class="w-48 h-36 md:w-64 md:h-48 flex-shrink-0">
+                                     <img src="assets/images/testimonial2.jpg" alt="Foto Reni Yolanda di depan rumah barunya" class="object-cover w-full h-full rounded-2xl shadow-lg">
                                 </div>
                                 <!-- Text Container -->
                                 <div class="md:w-2/3 text-center md:text-left">
@@ -212,15 +212,15 @@
                                     <blockquote class="text-gray-600 italic">
                                         <p class="text-lg leading-relaxed">"Gokil! Ternyata Sat Set Banget! Rumah impian akhirnya jadi kenyataan! ✨ Dulu boro-boro ngajak kumpul keluarga, di rumah ortu yang sepetak, tiap ada tamu kudu gulung kasur dulu. Sempit, cuy! Sekarang? Speechless. Program RUMAH MERDEKA prosesnya cuma 2 HARI dari pemberkasan sampe serah terima kunci. Gak pake ribet!"</p>
                                         <div class="mt-4 text-left text-base not-italic">
-                                             <p class="text-gray-700 font-medium">Perumahan Grand Citeras emang the best:</p>
-                                             <ul class="list-none space-y-1 mt-2 text-gray-600">
+                                             <!-- <p class="text-gray-700 font-medium">Perumahan Grand Citeras emang the best:</p> -->
+                                             <!-- <ul class="list-none space-y-1 mt-2 text-gray-600">
                                                 <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Akses jalan lebar</span></li>
                                                 <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Cuma 5 menit ke stasiun (auto jadi anak kereta dong!)</span></li>
                                                 <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Fasilitasnya Kids Friendly banget</span></li>
                                                 <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Legalitasnya sudah sertipikat, jadi tenang deh</span></li>
                                                 <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Keamanan 24jam, serasa di perumahan elit</span></li>
                                                 <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Developernya ramah & helpful banget</span></li>
-                                             </ul>
+                                             </ul> -->
                                         </div>
                                          <p class="text-lg leading-relaxed mt-4 font-semibold">Highly recommended!</p>
                                     </blockquote>
@@ -234,9 +234,9 @@
 
                         <!-- Slide 3 -->
                         <!-- <div class="testimonial-slide w-full flex-shrink-0">
-                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 p-8 md:p-12 w-full">
-                                <div class="w-full md:w-1/3 flex-shrink-0 flex justify-center items-center">
-                                    <img src="https://placehold.co/400x400/e2e8f0/64748b?text=Budi" alt="Foto Budi Santoso" class="object-contain max-h-80 rounded-2xl shadow-lg">
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 p-6 md:p-8 w-full">
+                                <div class="w-48 h-36 md:w-64 md:h-48 flex-shrink-0">
+                                    <img src="https://placehold.co/256x192/e2e8f0/64748b?text=Budi" alt="Foto Budi Santoso" class="object-cover w-full h-full rounded-2xl shadow-lg">
                                 </div>
                                 <div class="md:w-2/3 text-center md:text-left">
                                     <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>

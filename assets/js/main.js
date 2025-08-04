@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const countdownElement = document.getElementById('countdown');
     if (countdownElement) {
         const countdown = () => {
-            const countDate = new Date('August 4, 2025 16:00:00').getTime();
+            const countDate = new Date('August 5, 2025 23:59:59').getTime();
             const now = new Date().getTime();
             const gap = countDate - now;
 
