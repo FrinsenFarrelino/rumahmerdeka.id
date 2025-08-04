@@ -3,14 +3,16 @@ header('Content-Type: application/json');
 
 require_once 'config.php';
 
+// Fungsi untuk mengirim response JSON dan menghentikan skrip
 function send_response($status, $message) {
     echo json_encode(['status' => $status, 'message' => $message]);
     exit;
 }
 
-function handle_upload($file_input_name, $upload_dir) {
+// Fungsi untuk menangani upload file
+function handle_upload($file_input_name, $upload_dir, $nik) {
     if (!isset($_FILES[$file_input_name]) || $_FILES[$file_input_name]['error'] !== UPLOAD_ERR_OK) {
-        return ['error' => 'File tidak diunggah atau terjadi error.'];
+        return ['error' => 'File tidak diunggah atau terjadi error. Pastikan Anda telah memilih file.'];
     }
 
     $file = $_FILES[$file_input_name];
@@ -20,14 +22,14 @@ function handle_upload($file_input_name, $upload_dir) {
     
     $allowed_ext = ['jpg', 'jpeg', 'png', 'pdf'];
     if (!in_array($file_ext, $allowed_ext)) {
-        return ['error' => 'Format file tidak diizinkan. Hanya JPG, PNG, dan PDF.'];
+        return ['error' => 'Format file tidak diizinkan. Hanya JPG, JPEG, PNG, dan PDF.'];
     }
 
-    if ($file_size > 5 * 1024 * 1024) { // 5 MB
-        return ['error' => 'Ukuran file tidak boleh lebih dari 5MB.'];
+    if ($file_size > 2 * 1024 * 1024) { // 2 MB
+        return ['error' => 'Ukuran file tidak boleh lebih dari 2MB.'];
     }
 
-    $new_file_name = uniqid('', true) . '.' . $file_ext;
+    $new_file_name = $nik . '_' . uniqid() . '.' . $file_ext;
     $destination = $upload_dir . $new_file_name;
 
     if (!is_dir($upload_dir)) {
@@ -45,6 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_response('error', 'Metode request tidak valid.');
 }
 
+// Koneksi ke database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) {
+    send_response('error', 'Koneksi database gagal: ' . $conn->connect_error);
+}
+
 // Data Karyawan
 $nama_karyawan = trim($_POST['nama_karyawan'] ?? '');
 $nik_karyawan = trim($_POST['nik_karyawan'] ?? '');
@@ -57,26 +65,20 @@ $penghasilan_sesuai = trim($_POST['penghasilan_sesuai'] ?? '');
 
 // Validasi Data Wajib Karyawan
 if (empty($nama_karyawan) || empty($nik_karyawan) || empty($nomor_induk_karyawan) || empty($no_hp_karyawan) || empty($alamat_karyawan) || empty($status_perkawinan) || empty($penghasilan_sesuai)) {
-    send_response('error', 'Semua data karyawan, termasuk status perkawinan dan penghasilan, wajib diisi.');
+    send_response('error', 'Semua data karyawan wajib diisi.');
 }
-
-// Validasi Format NIK Karyawan (Dikembalikan)
 if (!preg_match('/^[0-9]{16}$/', $nik_karyawan)) {
     send_response('error', 'Format NIK Karyawan tidak valid (harus 16 digit angka).');
 }
 
-if (!in_array($penghasilan_sesuai, ['ya', 'tidak'])) {
-    send_response('error', 'Nilai untuk field penghasilan tidak valid.');
-}
-
 // Upload KTP Karyawan
-$upload_karyawan = handle_upload('ktp_karyawan', 'uploads/ktp_karyawan/');
+$upload_karyawan = handle_upload('ktp_karyawan', UPLOAD_DIR_KARYAWAN, $nik_karyawan);
 if (isset($upload_karyawan['error'])) {
     send_response('error', 'KTP Karyawan: ' . $upload_karyawan['error']);
 }
 $path_ktp_karyawan = $upload_karyawan['path'];
 
-// Inisialisasi Data Pasangan
+// Inisialisasi dan Proses Data Pasangan jika Menikah
 $nama_pasangan = null;
 $nik_pasangan = null;
 $no_hp_pasangan = null;
@@ -84,7 +86,6 @@ $email_pasangan = null;
 $alamat_pasangan = null;
 $path_ktp_pasangan = null;
 
-// Proses Data Pasangan jika Menikah
 if ($status_perkawinan === 'menikah') {
     $nama_pasangan = trim($_POST['nama_pasangan'] ?? '');
     $nik_pasangan = trim($_POST['nik_pasangan'] ?? '');
@@ -95,13 +96,11 @@ if ($status_perkawinan === 'menikah') {
     if (empty($nama_pasangan) || empty($nik_pasangan) || empty($no_hp_pasangan) || empty($alamat_pasangan)) {
         send_response('error', 'Semua data pasangan (kecuali email) wajib diisi jika status menikah.');
     }
-    
-    // Validasi Format NIK Pasangan (Dikembalikan)
     if (!preg_match('/^[0-9]{16}$/', $nik_pasangan)) {
         send_response('error', 'Format NIK Pasangan tidak valid (harus 16 digit angka).');
     }
 
-    $upload_pasangan = handle_upload('ktp_pasangan', 'uploads/ktp_pasangan/');
+    $upload_pasangan = handle_upload('ktp_pasangan', UPLOAD_DIR_PASANGAN, $nik_pasangan);
     if (isset($upload_pasangan['error'])) {
         send_response('error', 'KTP Pasangan: ' . $upload_pasangan['error']);
     }
@@ -116,7 +115,6 @@ if ($stmt === false) {
     send_response('error', 'Gagal menyiapkan statement database: ' . $conn->error);
 }
 
-// Perbarui bind_param dengan tipe data yang benar (15 parameter)
 $stmt->bind_param("sssssssssssssss", 
     $nama_karyawan, $nik_karyawan, $nomor_induk_karyawan, $no_hp_karyawan, $email_karyawan, $alamat_karyawan, $path_ktp_karyawan, 
     $status_perkawinan, $penghasilan_sesuai, 

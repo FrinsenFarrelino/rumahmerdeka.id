@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const maritalStatusRadios = document.querySelectorAll('input[name="status_perkawinan"]');
     const spouseFields = document.getElementById('spouseFields');
     const spouseInputs = spouseFields.querySelectorAll('input, textarea');
-    
     const incomeSingleDiv = document.getElementById('incomeSingle');
     const incomeMarriedDiv = document.getElementById('incomeMarried');
     const incomeSingleRadios = document.querySelectorAll('input[name="penghasilan_sesuai"]');
@@ -72,27 +71,22 @@ document.addEventListener('DOMContentLoaded', function () {
     maritalStatusRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             const isMarried = e.target.value === 'menikah';
-            
             spouseFields.classList.toggle('hidden', !isMarried);
             spouseInputs.forEach(input => {
-                if (isMarried) input.setAttribute('required', '');
-                else input.removeAttribute('required');
+                input.required = isMarried;
             });
-
             incomeSingleDiv.classList.toggle('hidden', isMarried);
             incomeMarriedDiv.classList.toggle('hidden', !isMarried);
-
             if (isMarried) {
-                incomeSingleRadios.forEach(r => { r.name = '_penghasilan_sesuai'; r.removeAttribute('required'); });
-                incomeMarriedRadios.forEach(r => { r.name = 'penghasilan_sesuai'; r.setAttribute('required', ''); });
+                incomeSingleRadios.forEach(r => { r.name = '_penghasilan_sesuai'; r.required = false; });
+                incomeMarriedRadios.forEach(r => { r.name = 'penghasilan_sesuai'; r.required = true; });
             } else {
-                incomeSingleRadios.forEach(r => { r.name = 'penghasilan_sesuai'; r.setAttribute('required', ''); });
-                incomeMarriedRadios.forEach(r => { r.name = '_penghasilan_sesuai_gabungan'; r.removeAttribute('required'); });
+                incomeSingleRadios.forEach(r => { r.name = 'penghasilan_sesuai'; r.required = true; });
+                incomeMarriedRadios.forEach(r => { r.name = '_penghasilan_sesuai_gabungan'; r.required = false; });
             }
         });
     });
     document.querySelector('input[name="status_perkawinan"]:checked').dispatchEvent(new Event('change'));
-
 
     // --- Success Modal Logic ---
     const successModal = document.getElementById('successModal');
@@ -106,25 +100,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 10);
     };
 
-    // [UPDATE v1.11] Fungsi hideModal diperbarui
     const hideModal = () => {
-        // Animasi menyembunyikan modal
         successModal.classList.add('opacity-0');
         successModal.querySelector('div').classList.add('scale-95');
         setTimeout(() => {
             successModal.classList.add('hidden');
+            if (registrationSection) {
+                registrationSection.classList.add('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 300);
-
-        // Sembunyikan form pendaftaran
-        if (registrationSection) {
-            registrationSection.classList.add('hidden');
-        }
-
-        // Gulir halaman ke paling atas
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
     };
 
     if(closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
@@ -132,11 +117,44 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target === successModal) hideModal();
     });
 
+    // --- Button Click Counter Logic ---
+    const recordClick = (buttonId) => {
+        const formData = new FormData();
+        formData.append('button_id', buttonId);
 
+        fetch('update_counter.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { 
+                    throw new Error(`Server Error: ${response.status} ${response.statusText} - ${text}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                console.log(`Counter for '${buttonId}' updated successfully.`);
+            } else {
+                console.error(`Failed to update counter for '${buttonId}':`, data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Counter Fetch Error:', error);
+        });
+    };
+
+    document.getElementById('daftar-sekarang-btn')?.addEventListener('click', () => recordClick('daftar_sekarang_btn'));
+    document.getElementById('saya-mau-daftar-btn')?.addEventListener('click', () => recordClick('saya_mau_daftar_btn'));
+    
     // --- Form Submission Logic (AJAX) ---
     if(form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
+            
+            recordClick('submitBtn');
 
             const originalBtnContent = submitBtn.innerHTML;
             submitBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Mengirim...`;
@@ -173,5 +191,60 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.disabled = false;
             });
         });
+    }
+
+    // --- Testimonial Slider Logic (Endless Loop with Arrows) ---
+    const slider = document.getElementById('testimonial-slider');
+    if (slider) {
+        const track = document.getElementById('slider-track');
+        const slides = Array.from(track.children);
+        const nextBtn = document.getElementById('next-slide');
+        const prevBtn = document.getElementById('prev-slide');
+        
+        if (slides.length > 1) {
+            let currentSlideIndex = 0;
+            let slideInterval;
+            const slideDuration = 5000; // 5 detik
+
+            const updateSlidePosition = () => {
+                track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+            };
+            
+            const showSlide = (index) => {
+                // The modulo operator creates the endless loop effect
+                currentSlideIndex = (index + slides.length) % slides.length;
+                updateSlidePosition();
+            };
+
+            const next = () => {
+                showSlide(currentSlideIndex + 1);
+            };
+
+            const prev = () => {
+                showSlide(currentSlideIndex - 1);
+            };
+
+            const startSlideShow = () => {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(next, slideDuration);
+            };
+
+            nextBtn.addEventListener('click', () => {
+                next();
+                startSlideShow(); // Restart interval on manual click
+            });
+
+            prevBtn.addEventListener('click', () => {
+                prev();
+                startSlideShow(); // Restart interval on manual click
+            });
+
+            // Initialize slider
+            startSlideShow();
+        } else {
+            // If only one slide, hide navigation
+            if(nextBtn) nextBtn.style.display = 'none';
+            if(prevBtn) prevBtn.style.display = 'none';
+        }
     }
 });
