@@ -39,3 +39,20 @@ INSERT INTO `button_clicks` (`button_id`, `click_count`) VALUES
 ('saya_mau_daftar_btn', 0),
 ('submitBtn', 0)
 ON DUPLICATE KEY UPDATE button_id=button_id; -- Lakukan apa-apa jika sudah ada
+
+
+-- Tabel untuk pengguna admin backoffice
+CREATE TABLE IF NOT EXISTS `admin_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Menambahkan pengguna admin default
+-- Passwordnya adalah 'admin123', di-hash menggunakan SHA1 (tidak aman)
+INSERT INTO `admin_users` (`username`, `password`) VALUES
+('admin', '40bd001563085fc35165329ea1ff5c5ecbdbbeef')
+ON DUPLICATE KEY UPDATE password='40bd001563085fc35165329ea1ff5c5ecbdbbeef';
