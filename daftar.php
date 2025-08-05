@@ -25,9 +25,9 @@ function handle_upload($file_input_name, $upload_dir, $nik) {
         return ['error' => 'Format file tidak diizinkan. Hanya JPG, JPEG, PNG, dan PDF.'];
     }
 
-    if ($file_size > 2 * 1024 * 1024) { // 2 MB
-        return ['error' => 'Ukuran file tidak boleh lebih dari 2MB.'];
-    }
+    // if ($file_size > 2 * 1024 * 1024) { // 2 MB
+    //     return ['error' => 'Ukuran file tidak boleh lebih dari 2MB.'];
+    // }
 
     $new_file_name = $nik . '_' . uniqid() . '.' . $file_ext;
     $destination = $upload_dir . $new_file_name;
