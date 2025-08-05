@@ -255,10 +255,10 @@
                 </div>
 
                 <!-- Navigation Arrows -->
-                <button id="prev-slide" aria-label="Previous Slide" class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition z-10 hidden md:flex items-center justify-center">
+                <button id="prev-slide" aria-label="Previous Slide" class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition z-10 hidden xl:flex items-center justify-center">
                     <i data-lucide="chevron-left" class="w-6 h-6 text-gray-700"></i>
                 </button>
-                <button id="next-slide" aria-label="Next Slide" class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition z-10 hidden md:flex items-center justify-center">
+                <button id="next-slide" aria-label="Next Slide" class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition z-10 hidden xl:flex items-center justify-center">
                     <i data-lucide="chevron-right" class="w-6 h-6 text-gray-700"></i>
                 </button>
 
