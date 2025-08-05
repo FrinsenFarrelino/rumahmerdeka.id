@@ -7,10 +7,16 @@ require_once 'api/get_participants.php';
 
 <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
     <h2 class="text-3xl font-semibold text-gray-700">Data Lengkap Peserta</h2>
-    <a href="export_pdf.php" target="_blank" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center">
-        <i data-lucide="file-down" class="w-4 h-4 mr-2"></i>
-        <span>Ekspor ke PDF</span>
-    </a>
+    <div class="flex flex-wrap gap-2">
+        <a href="export_pdf.php" target="_blank" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center">
+            <i data-lucide="file-down" class="w-4 h-4 mr-2"></i>
+            <span>Export ke PDF</span>
+        </a>
+        <a href="export_excel.php" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center">
+            <i data-lucide="sheet" class="w-4 h-4 mr-2"></i>
+            <span>Export ke Excel</span>
+        </a>
+    </div>
 </div>
 
 <!-- Container untuk membuat tabel bisa di-scroll pada layar kecil -->
