@@ -31,17 +31,17 @@ $status_data_options = ['active', 'inactive'];
 $status_perkawinan_options = ['lajang', 'menikah'];
 $penghasilan_options = ['ya', 'tidak'];
 
-$user_role = $_SESSION['role'] ?? 'viewMRP';
+$user_role = $_SESSION['role'] ?? 'viewRMP';
 
 // [UPDATE v1.5] Tentukan apakah form bisa diedit penuh
 $is_fully_editable = ($user_role === 'superadmin');
-$is_partially_editable = ($user_role === 'adminMRP');
+$is_partially_editable = ($user_role === 'adminRMP');
 
 ?>
 
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-semibold text-gray-700">
-        <?php echo ($user_role === 'viewMRP') ? 'Lihat' : 'Edit'; ?> Data Peserta: <?php echo htmlspecialchars($participant['nama_karyawan']); ?>
+        <?php echo ($user_role === 'viewRMP') ? 'Lihat' : 'Edit'; ?> Data Peserta: <?php echo htmlspecialchars($participant['nama_karyawan']); ?>
     </h2>
     <!-- [UPDATE v1.7] Tombol Kembali -->
     <a href="dashboard.php?page=participants" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
@@ -67,7 +67,7 @@ $is_partially_editable = ($user_role === 'adminMRP');
     <!-- Data Tambahan -->
     <div class="p-6 border border-gray-200 rounded-lg">
         <h3 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Data Tambahan (Admin)</h3>
-        <fieldset <?php echo ($user_role === 'viewMRP') ? 'disabled' : ''; ?>>
+        <fieldset <?php echo ($user_role === 'viewRMP') ? 'disabled' : ''; ?>>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="status_proses" class="block font-semibold mb-1">Status Proses</label>
@@ -79,7 +79,7 @@ $is_partially_editable = ($user_role === 'adminMRP');
                 </div>
                 <div>
                     <label for="status_data" class="block font-semibold mb-1">Status Data</label>
-                    <select id="status_data" name="status_data" class="w-full p-3 border border-gray-300 rounded-lg" <?php echo ($user_role === 'adminMRP' || $user_role === 'viewMRP') ? 'disabled' : ''; ?>>
+                    <select id="status_data" name="status_data" class="w-full p-3 border border-gray-300 rounded-lg" <?php echo ($user_role === 'adminRMP' || $user_role === 'viewRMP') ? 'disabled' : ''; ?>>
                         <?php foreach ($status_data_options as $option): ?>
                             <option value="<?php echo $option; ?>" <?php echo ($participant['status_data'] === $option) ? 'selected' : ''; ?>><?php echo ucfirst($option); ?></option>
                         <?php endforeach; ?>
@@ -152,7 +152,7 @@ $is_partially_editable = ($user_role === 'adminMRP');
         </fieldset>
     </div>
 
-    <?php if ($user_role !== 'viewMRP'): ?>
+    <?php if ($user_role !== 'viewRMP'): ?>
     <div class="text-right">
         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
             Simpan Perubahan

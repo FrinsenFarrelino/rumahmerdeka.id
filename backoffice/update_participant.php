@@ -5,8 +5,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-$user_role = $_SESSION['role'] ?? 'viewMRP';
-if ($user_role === 'viewMRP') {
+$user_role = $_SESSION['role'] ?? 'viewRMP';
+if ($user_role === 'viewRMP') {
     header('HTTP/1.1 403 Forbidden');
     exit('Anda tidak memiliki izin untuk melakukan aksi ini.');
 }
@@ -108,8 +108,8 @@ if ($user_role === 'superadmin') {
         $data['status_data'], $data['path_sikasep_1'], $data['path_sikasep_2'], $data['id']
     );
 
-} elseif ($user_role === 'adminMRP') {
-    // adminMRP hanya bisa mengedit data tambahan
+} elseif ($user_role === 'adminRMP') {
+    // adminRMP hanya bisa mengedit data tambahan
     $data = [
         'slik_bi_checking' => !empty($_POST['slik_bi_checking']) ? $_POST['slik_bi_checking'] : null,
         'status_proses' => $_POST['status_proses'],

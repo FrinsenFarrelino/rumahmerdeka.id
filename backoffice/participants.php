@@ -7,7 +7,7 @@ $filter_status_data = $_GET['status_data'] ?? '';
 
 // Memuat koneksi database dan mengambil semua data peserta dari tabel 'pendaftar'
 require_once 'api/get_participants.php';
-$user_role = $_SESSION['role'] ?? 'viewMRP';
+$user_role = $_SESSION['role'] ?? 'viewRMP';
 
 // Daftar opsi untuk dropdown filter
 $status_proses_options = [
@@ -200,8 +200,8 @@ $status_data_options = ['active', 'inactive'];
                             </span>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm align-top">
-                            <?php // [UPDATE v1.5] Sembunyikan tombol Edit untuk viewMRP ?>
-                            <?php if ($user_role !== 'viewMRP'): ?>
+                            <?php // [UPDATE v1.5] Sembunyikan tombol Edit untuk viewRMP ?>
+                            <?php if ($user_role !== 'viewRMP'): ?>
                                 <a href="dashboard.php?page=edit_participant&id=<?php echo $row['id']; ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                             <?php else: ?>
                                 <span class="text-gray-400">View Only</span>
