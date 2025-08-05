@@ -40,7 +40,7 @@ if ($result->num_rows === 1) {
         $_SESSION['role'] = $user['role']; // [UPDATE v1.5] Simpan role ke session
 
         // Redirect ke halaman default setelah login
-        header('Location: dashboard.php');
+        header('Location: dashboard.php?page=participants');
         exit;
     }
 }
