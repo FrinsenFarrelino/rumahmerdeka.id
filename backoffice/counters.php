@@ -5,8 +5,7 @@ require_once 'api/get_counters.php';
 $button_map = [
     'daftar_sekarang_btn' => ['label' => 'Tombol "Daftar Sekarang" (Hero)', 'icon' => 'arrow-right-circle'],
     'saya_mau_daftar_btn' => ['label' => 'Tombol "Saya Mau Daftar"', 'icon' => 'home'],
-    // 'submitBtn' => ['label' => 'Tombol "Kirim Pendaftaran"', 'icon' => 'send']
-    'tes' => ['label' => 'Tombol "Kirim Pendaftaran"', 'icon' => 'send']
+    'submitBtn' => ['label' => 'Tombol "Kirim Pendaftaran"', 'icon' => 'send']
 ];
 ?>
 
