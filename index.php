@@ -1,3 +1,19 @@
+<?php
+// [UPDATE v1.1] Kode untuk menghitung page views
+require_once 'config.php';
+$counter_conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if (!$counter_conn->connect_error) {
+    $page_view_id = 'page_views';
+    $sql = "INSERT INTO button_clicks (button_id, click_count) VALUES (?, 1) ON DUPLICATE KEY UPDATE click_count = click_count + 1";
+    $stmt = $counter_conn->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("s", $page_view_id);
+        $stmt->execute();
+        $stmt->close();
+    }
+    $counter_conn->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -13,127 +29,25 @@
         html { scroll-behavior: smooth; }
         body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
         .hero-gradient { background: linear-gradient(135deg, #e63946, #c9184a); }
-        
-        .btn-cta {
-            background-image: linear-gradient(to right, #e11d48, #be123c);
-            color: white;
-            font-weight: 700;
-            padding: 1rem 2.5rem;
-            border-radius: 9999px;
-            display: inline-block;
-            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            border: 2px solid transparent;
-        }
-        .btn-cta:hover {
-            transform: scale(1.05) translateY(-0.25rem);
-            box-shadow: 0 0 20px 5px rgb(244 63 94 / 0.5);
-        }
-        .btn-cta:focus {
-            outline: none;
-            box-shadow: 0 0 0 4px #fecdd3;
-        }
-
-        .btn-whatsapp {
-            background-color: #22c55e;
-            color: white;
-            font-weight: 700;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        .btn-whatsapp:hover {
-            transform: scale(1.05) translateY(-0.25rem);
-            background-color: #16a34a;
-            box-shadow: 0 0 20px 5px rgb(34 197 94 / 0.5);
-        }
-        .btn-whatsapp:focus {
-            outline: none;
-            box-shadow: 0 0 0 4px #bbf7d0;
-        }
-
-        .card { 
-            background-color: white;
-            border-radius: 1rem;
-            padding: 2rem 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
-            transition: transform 300ms;
-        }
-        .card:hover {
-            transform: translateY(-0.5rem);
-        }
-        
-        .countdown-box { 
-            background-image: linear-gradient(to bottom right, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-            backdrop-filter: blur(4px);
-            text-align: center;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .countdown-number { 
-            font-size: 24px;
-            line-height: 2.5rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        @media (min-width: 768px) {
-            .countdown-number { font-size: 60px; line-height: 1; }
-            .countdown-label { font-size: 14px; }
-        }
-        .countdown-label { 
-            font-size: 10px;
-            line-height: 1.25rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
+        .btn-cta { background-image: linear-gradient(to right, #e11d48, #be123c); color: white; font-weight: 700; padding: 1rem 2.5rem; border-radius: 9999px; display: inline-block; transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); border: 2px solid transparent; }
+        .btn-cta:hover { transform: scale(1.05) translateY(-0.25rem); box-shadow: 0 0 20px 5px rgb(244 63 94 / 0.5); }
+        .btn-cta:focus { outline: none; box-shadow: 0 0 0 4px #fecdd3; }
+        .btn-whatsapp { background-color: #22c55e; color: white; font-weight: 700; padding: 0.75rem 1.5rem; border-radius: 9999px; display: flex; align-items: center; gap: 0.5rem; transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        .btn-whatsapp:hover { transform: scale(1.05) translateY(-0.25rem); background-color: #16a34a; box-shadow: 0 0 20px 5px rgb(34 197 94 / 0.5); }
+        .btn-whatsapp:focus { outline: none; box-shadow: 0 0 0 4px #bbf7d0; }
+        .card { background-color: white; border-radius: 1rem; padding: 2rem 1.5rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07); transition: transform 300ms; }
+        .card:hover { transform: translateY(-0.5rem); }
+        .countdown-box { background-image: linear-gradient(to bottom right, rgba(255,255,255,0.3), rgba(255,255,255,0.1)); backdrop-filter: blur(4px); text-align: center; padding: 1rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .countdown-number { font-size: 24px; line-height: 2.5rem; font-weight: 800; letter-spacing: -0.025em; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        @media (min-width: 768px) { .countdown-number { font-size: 60px; line-height: 1; } .countdown-label { font-size: 14px; } }
+        .countdown-label { font-size: 10px; line-height: 1.25rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.8); }
         .floating-whatsapp { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-        
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2000;
-        }
-        
-        /* CSS untuk slider testimoni baru */
-        #testimonial-slider {
-            touch-action: pan-y; /* Izinkan scroll vertikal di area slider */
-        }
-        .grabbing {
-            cursor: grabbing;
-            cursor: -webkit-grabbing;
-        }
-        .testimonial-slide {
-            box-sizing: border-box;
-            display: flex; /* Membuat slide menjadi flex container */
-            align-items: center; /* Vertically center content */
-            min-height: 420px; /* Menetapkan tinggi minimum untuk konsistensi */
-        }
-        .slider-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #cbd5e1; /* slate-300 */
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .slider-dot.active {
-            background-color: #c9184a; /* Warna utama baru */
-            transform: scale(1.25);
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; }
+        #testimonial-slider { touch-action: pan-y; }
+        .grabbing { cursor: grabbing; cursor: -webkit-grabbing; }
+        .testimonial-slide { box-sizing: border-box; display: flex; align-items: center; min-height: 420px; }
+        .slider-dot { width: 12px; height: 12px; border-radius: 50%; background-color: #cbd5e1; border: none; padding: 0; cursor: pointer; transition: all 0.3s; }
+        .slider-dot.active { background-color: #c9184a; transform: scale(1.25); }
     </style>
 </head>
 
@@ -181,11 +95,9 @@
                         <!-- Slide 1 -->
                         <div class="testimonial-slide w-full flex-shrink-0">
                             <div class="flex flex-col md:flex-row items-center justify-center gap-8 p-6 md:p-8 w-full">
-                                <!-- Image Container -->
                                 <div class="w-48 h-36 md:w-64 md:h-48 flex-shrink-0">
                                     <img src="assets/images/testimonial.jpg" alt="Foto Sultan Hamsah dan keluarga" class="object-cover w-full h-full rounded-2xl shadow-lg">
                                 </div>
-                                <!-- Text Container -->
                                 <div class="md:w-2/3 text-center md:text-left">
                                     <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>
                                     <blockquote class="text-lg md:text-xl text-gray-600 italic leading-relaxed">
@@ -202,27 +114,14 @@
                         <!-- Slide 2 -->
                         <div class="testimonial-slide w-full flex-shrink-0">
                             <div class="flex flex-col md:flex-row items-center justify-center gap-8 p-6 md:p-8 w-full">
-                                <!-- Image Container -->
                                 <div class="w-48 h-36 md:w-64 md:h-48 flex-shrink-0">
                                      <img src="assets/images/testimonial2.jpg" alt="Foto Reni Yolanda di depan rumah barunya" class="object-cover w-full h-full rounded-2xl shadow-lg">
                                 </div>
-                                <!-- Text Container -->
                                 <div class="md:w-2/3 text-center md:text-left">
                                     <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>
                                     <blockquote class="text-gray-600 italic">
                                         <p class="text-lg leading-relaxed">"Gokil! Ternyata Sat Set Banget! Rumah impian akhirnya jadi kenyataan! ✨ Dulu boro-boro ngajak kumpul keluarga, di rumah ortu yang sepetak, tiap ada tamu kudu gulung kasur dulu. Sempit, cuy! Sekarang? Speechless. Program RUMAH MERDEKA prosesnya cuma 2 HARI dari pemberkasan sampe serah terima kunci. Gak pake ribet!"</p>
-                                        <div class="mt-4 text-left text-base not-italic">
-                                             <!-- <p class="text-gray-700 font-medium">Perumahan Grand Citeras emang the best:</p> -->
-                                             <!-- <ul class="list-none space-y-1 mt-2 text-gray-600">
-                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Akses jalan lebar</span></li>
-                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Cuma 5 menit ke stasiun (auto jadi anak kereta dong!)</span></li>
-                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Fasilitasnya Kids Friendly banget</span></li>
-                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Legalitasnya sudah sertipikat, jadi tenang deh</span></li>
-                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Keamanan 24jam, serasa di perumahan elit</span></li>
-                                                <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>Developernya ramah & helpful banget</span></li>
-                                             </ul> -->
-                                        </div>
-                                         <p class="text-lg leading-relaxed mt-4 font-semibold">Highly recommended!</p>
+                                        <p class="text-lg leading-relaxed mt-4 font-semibold">Highly recommended!</p>
                                     </blockquote>
                                     <div class="mt-6">
                                         <p class="font-bold text-lg text-red-600">Reni Yolanda</p>
@@ -231,26 +130,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Slide 3 -->
-                        <!-- <div class="testimonial-slide w-full flex-shrink-0">
-                            <div class="flex flex-col md:flex-row items-center justify-center gap-8 p-6 md:p-8 w-full">
-                                <div class="w-48 h-36 md:w-64 md:h-48 flex-shrink-0">
-                                    <img src="https://placehold.co/256x192/e2e8f0/64748b?text=Budi" alt="Foto Budi Santoso" class="object-cover w-full h-full rounded-2xl shadow-lg">
-                                </div>
-                                <div class="md:w-2/3 text-center md:text-left">
-                                    <i data-lucide="quote" class="w-10 h-10 text-red-200 mb-4 inline-block"></i>
-                                    <blockquote class="text-lg md:text-xl text-gray-600 italic leading-relaxed">
-                                        "Solusi untuk saudara-saudara yang mungkin terhalang pandemi. Prosesnya sangat mudah dan dibantu sampai serah terima kunci. Sangat direkomendasikan!"
-                                    </blockquote>
-                                    <div class="mt-6">
-                                        <p class="font-bold text-lg text-red-600">Budi Santoso</p>
-                                        <p class="text-gray-500">Driver Ojek Online</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
                     </div>
                 </div>
 
