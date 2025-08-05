@@ -21,7 +21,8 @@ if ($conn->connect_error) {
     exit;
 }
 
-$sql = "SELECT password FROM admin_users WHERE username = ?";
+// [UPDATE v1.5] Mengambil password dan role
+$sql = "SELECT password, role FROM admin_users WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
@@ -30,13 +31,15 @@ $result = $stmt->get_result();
 if ($result->num_rows === 1) {
     $user = $result->fetch_assoc();
     
-    // PERINGATAN KEAMANAN: SHA1 tidak direkomendasikan untuk hashing password.
-    // Metode ini rentan terhadap serangan. Gunakan password_verify() untuk keamanan yang lebih baik.
+    // Peringatan: SHA1 tidak aman. Gunakan password_hash() dan password_verify() di proyek nyata.
     if ($user['password'] === sha1($password)) {
         // Password benar
         session_regenerate_id();
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;
+        $_SESSION['role'] = $user['role']; // [UPDATE v1.5] Simpan role ke session
+
+        // Redirect ke halaman default setelah login
         header('Location: dashboard.php');
         exit;
     }

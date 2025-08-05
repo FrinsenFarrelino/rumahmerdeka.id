@@ -49,6 +49,10 @@ $html .= '<thead style="background-color:#f2f2f2; font-weight:bold;">
                 <th>Info Pasangan</th>
                 <th>Kontak & Alamat Pasangan</th>
                 <th>Dokumen KTP</th>
+                <th>SIKASEP</th>
+                <th>SLIK / BI Checking</th>
+                <th>Status Proses</th>
+                <th>Status Data</th>
             </tr>
           </thead>';
 
@@ -97,7 +101,47 @@ while ($row = $result->fetch_assoc()) {
         }
     }
     $html .= '<td style="vertical-align: top; text-align: center;">' . $dokumen_html . '</td>';
+
+    // Dokumen (Gambar SIKASEP) - Menggunakan path absolut server untuk keandalan
+    $dokumen_html = '';
+    // Mendapatkan direktori root proyek (satu level di atas 'backoffice')
+    $project_server_root = dirname(__DIR__); 
     
+    // Proses FILE SIKASEP
+    if (!empty($row['path_sikasep_1'])) {
+        $sikasep_1 = $row['path_sikasep_1'];
+        $full_path_sikasep_1 = $project_server_root . '/' . ltrim($sikasep_1, '/');
+        if (!empty($sikasep_1) && file_exists($full_path_sikasep_1) && is_readable($full_path_sikasep_1)) {
+            $imageData = base64_encode(file_get_contents($full_path_sikasep_1));
+            $dokumen_html .= '<img src="@' . $imageData . '" width="120"><br/><small>File 1</small>';
+        } else {
+            $dokumen_html .= '<small>File 1 tidak ada</small>';
+        }
+    } else {
+        $dokumen_html .= '<small>File 1 tidak ada</small>';
+    }
+
+    if (!empty($row['path_sikasep_2'])) {
+        $sikasep_2 = $row['path_sikasep_2'];
+        $full_path_sikasep_2 = $project_server_root . '/' . ltrim($sikasep_2, '/');
+        if (!empty($sikasep_2) && file_exists($full_path_sikasep_2) && is_readable($full_path_sikasep_2)) {
+            $imageData = base64_encode(file_get_contents($full_path_sikasep_2));
+            $dokumen_html .= '<br/><br/><img src="@' . $imageData . '" width="120"><br/><small>File 2</small>';
+        } else {
+            $dokumen_html .= '<br/><br/><small>File 2 tidak ada</small>';
+        }
+    } else {
+        $dokumen_html .= '<br/><br/><small>File 2 tidak ada</small>';
+    }
+
+    $html .= '<td style="vertical-align: top; text-align: center;">' . $dokumen_html . '</td>';
+
+    $html .= '<td style="vertical-align: top;">' . ($row['slik_bi_checking'] ?? '-') . '</td>';
+
+    $html .= '<td style="vertical-align: top;">' . ($row['status_proses'] ?? '-') . '</td>';
+
+    $html .= '<td style="vertical-align: top;">' . ucfirst($row['status_data']) . '</td>';
+
     $html .= '</tr>';
 }
 $html .= '</tbody></table>';

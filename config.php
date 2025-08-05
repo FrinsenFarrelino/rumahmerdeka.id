@@ -25,6 +25,7 @@ define('DB_NAME', 'u127142362_rumah_merdeka'); // Nama database Anda
 // Direktori untuk menyimpan file yang di-upload
 define('UPLOAD_DIR_KARYAWAN', 'uploads/ktp_karyawan/');
 define('UPLOAD_DIR_PASANGAN', 'uploads/ktp_pasangan/');
+define('UPLOAD_DIR_SIKASEP', 'uploads/sikasep/'); // <-- [BARU v1.2]
 
 // Buat koneksi ke database menggunakan MySQLi
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
