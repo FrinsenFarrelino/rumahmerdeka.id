@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (gap < 0) {
                 if (countdownElement.innerHTML.includes('PROMO')) return;
-                countdownElement.innerHTML = '<div class="col-span-4 text-center text-2xl font-bold">PROMO TELAH BERAKHIR</div>';
+                countdownElement.innerHTML = '<div class="col-span-4 text-center text-2xl font-bold">PROMO TERBATAS</div>';
                 if(countdownInterval) clearInterval(countdownInterval);
                 return;
             }
@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('minutes').innerText = textMinute;
             document.getElementById('seconds').innerText = textSecond;
         };
-        countdown();
         const countdownInterval = setInterval(countdown, 1000);
+        countdown();
     }
 
     // --- Form Section Logic ---
