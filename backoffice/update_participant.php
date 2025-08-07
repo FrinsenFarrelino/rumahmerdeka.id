@@ -1,8 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('HTTP/1.1 403 Forbidden');
-    exit;
+    header('HTTP/1.1 403 Forbidden'); exit;
 }
 
 $user_role = $_SESSION['role'] ?? 'viewRMP';
@@ -51,7 +50,7 @@ if ($conn->connect_error) {
 }
 
 // Ambil path file saat ini sebelum update
-$stmt = $conn->prepare("SELECT path_sikasep_1, path_sikasep_2, nik_karyawan FROM pendaftar WHERE id = ?");
+$stmt = $conn->prepare("SELECT nik_karyawan, nik_pasangan, path_ktp_karyawan, path_ktp_pasangan, path_sikasep_1, path_sikasep_2 FROM pendaftar WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $current_data = $stmt->get_result()->fetch_assoc();
@@ -66,6 +65,16 @@ if (!$current_data) {
 $upload_dir_sikasep = 'uploads/sikasep/';
 $path_sikasep_1 = handle_file_upload('path_sikasep_1', $upload_dir_sikasep, $current_data['nik_karyawan'], $current_data['path_sikasep_1']);
 $path_sikasep_2 = handle_file_upload('path_sikasep_2', $upload_dir_sikasep, $current_data['nik_karyawan'], $current_data['path_sikasep_2']);
+
+// [UPDATE v1.8] Handle upload file KTP jika superadmin
+$path_ktp_karyawan = $current_data['path_ktp_karyawan'];
+$path_ktp_pasangan = $current_data['path_ktp_pasangan'];
+if ($user_role === 'superadmin') {
+    $path_ktp_karyawan = handle_file_upload('path_ktp_karyawan', UPLOAD_DIR_KARYAWAN, $current_data['nik_karyawan'], $current_data['path_ktp_karyawan']);
+    if (!empty($current_data['nik_pasangan'])) {
+        $path_ktp_pasangan = handle_file_upload('path_ktp_pasangan', UPLOAD_DIR_PASANGAN, $current_data['nik_pasangan'], $current_data['path_ktp_pasangan']);
+    }
+}
 
 // Kumpulkan semua data dari form.
 // Gunakan ternary operator untuk mengubah string kosong menjadi NULL untuk data opsional.
@@ -92,6 +101,8 @@ if ($user_role === 'superadmin') {
         'status_data' => $_POST['status_data'],
         'path_sikasep_1' => $path_sikasep_1,
         'path_sikasep_2' => $path_sikasep_2,
+        'path_ktp_karyawan' => $path_ktp_karyawan,
+        'path_ktp_pasangan' => $path_ktp_pasangan,
         'id' => $id
     ];
     
@@ -99,13 +110,19 @@ if ($user_role === 'superadmin') {
                 nama_karyawan = ?, nik_karyawan = ?, nomor_induk_karyawan = ?, no_hp_karyawan = ?, email_karyawan = ?, alamat_karyawan = ?, 
                 status_perkawinan = ?, penghasilan_sesuai = ?, 
                 nama_pasangan = ?, nik_pasangan = ?, no_hp_pasangan = ?, email_pasangan = ?, alamat_pasangan = ?, 
-                slik_bi_checking = ?, status_proses = ?, status_data = ?, path_sikasep_1 = ?, path_sikasep_2 = ?
+                slik_bi_checking = ?, status_proses = ?, status_data = ?, 
+                path_sikasep_1 = ?, path_sikasep_2 = ?,
+                path_ktp_karyawan = ?, path_ktp_pasangan = ?
             WHERE id = ?";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssssssssssi",
-        $data['nama_karyawan'], $data['nik_karyawan'], $data['nomor_induk_karyawan'], // ... (semua parameter)
-        $data['status_data'], $data['path_sikasep_1'], $data['path_sikasep_2'], $data['id']
+    $stmt->bind_param("ssssssssssssssssssssi", 
+        $data['nama_karyawan'], $data['nik_karyawan'], $data['nomor_induk_karyawan'], $data['no_hp_karyawan'], 
+        $data['email_karyawan'], $data['alamat_karyawan'], $data['status_perkawinan'], $data['penghasilan_sesuai'],
+        $data['nama_pasangan'], $data['nik_pasangan'], $data['no_hp_pasangan'], $data['email_pasangan'], 
+        $data['alamat_pasangan'], $data['slik_bi_checking'], $data['status_proses'], $data['status_data'], 
+        $data['path_sikasep_1'], $data['path_sikasep_2'], $data['path_ktp_karyawan'], $data['path_ktp_pasangan'],
+        $data['id']  // Keep this as the last parameter (for the WHERE clause)
     );
 
 } elseif ($user_role === 'adminRMP') {

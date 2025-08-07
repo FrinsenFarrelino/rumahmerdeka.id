@@ -134,6 +134,19 @@ $is_partially_editable = ($user_role === 'adminRMP');
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <!-- [UPDATE v1.8] Field Upload KTP Karyawan -->
+                <div>
+                    <label for="path_ktp_karyawan" class="block font-semibold mb-1">Upload Ulang KTP Karyawan</label>
+                    <input type="file" id="path_ktp_karyawan" name="path_ktp_karyawan" class="w-full text-sm">
+                    <?php if (!empty($participant['path_ktp_karyawan'])): ?>
+                        <div class="mt-2">
+                            <a href="../<?php echo htmlspecialchars($participant['path_ktp_karyawan']); ?>" target="_blank">
+                                <img src="../<?php echo htmlspecialchars($participant['path_ktp_karyawan']); ?>" alt="KTP Karyawan" class="h-24 w-auto rounded border">
+                            </a>
+                            <p class="text-xs text-blue-600">Lihat file saat ini</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </fieldset>
     </div>
@@ -148,6 +161,21 @@ $is_partially_editable = ($user_role === 'adminRMP');
                 <div><label for="no_hp_pasangan" class="block font-semibold mb-1">No. HP Pasangan</label><input type="tel" name="no_hp_pasangan" value="<?php echo htmlspecialchars($participant['no_hp_pasangan'] ?? ''); ?>" class="w-full p-3 border border-gray-300 rounded-lg"></div>
                 <div><label for="email_pasangan" class="block font-semibold mb-1">Email Pasangan</label><input type="email" name="email_pasangan" value="<?php echo htmlspecialchars($participant['email_pasangan'] ?? ''); ?>" class="w-full p-3 border border-gray-300 rounded-lg"></div>
                 <div class="md:col-span-2"><label for="alamat_pasangan" class="block font-semibold mb-1">Alamat Pasangan</label><textarea name="alamat_pasangan" rows="3" class="w-full p-3 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($participant['alamat_pasangan'] ?? ''); ?></textarea></div>
+                <!-- [UPDATE v1.8] Field Upload KTP Pasangan -->
+                <?php if ($participant['status_perkawinan'] === 'menikah'): ?>
+                <div>
+                    <label for="path_ktp_pasangan" class="block font-semibold mb-1">Upload Ulang KTP Pasangan</label>
+                    <input type="file" id="path_ktp_pasangan" name="path_ktp_pasangan" class="w-full text-sm">
+                    <?php if (!empty($participant['path_ktp_pasangan'])): ?>
+                        <div class="mt-2">
+                             <a href="../<?php echo htmlspecialchars($participant['path_ktp_pasangan']); ?>" target="_blank">
+                                <img src="../<?php echo htmlspecialchars($participant['path_ktp_pasangan']); ?>" alt="KTP Pasangan" class="h-24 w-auto rounded border">
+                            </a>
+                            <p class="text-xs text-blue-600">Lihat file saat ini</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
             </div>
         </fieldset>
     </div>

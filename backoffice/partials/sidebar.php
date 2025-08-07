@@ -12,6 +12,10 @@
                 <i data-lucide="users" class="w-5 h-5 mr-3"></i> Peserta
             </a>
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'superadmin'): ?>
+                <!-- [UPDATE v1.8] Link ke Dashboard Status -->
+                <a href="dashboard.php?page=status_dashboard" class="flex items-center px-8 py-3 hover:bg-gray-700">
+                    <i data-lucide="pie-chart" class="w-5 h-5 mr-3"></i> Dashboard Status
+                </a>
                 <a href="dashboard.php?page=analytics" class="flex items-center px-8 py-3 hover:bg-gray-700">
                     <i data-lucide="bar-chart-3" class="w-5 h-5 mr-3"></i> Analytics
                 </a>
@@ -22,7 +26,7 @@
         </nav>
     </div>
 
-    <!-- [UPDATE v1.6] Info Pengguna & Logout -->
+    <!-- Info Pengguna & Logout -->
     <div class="px-6 py-4 border-t border-gray-700">
         <div class="flex items-center mb-4">
             <i data-lucide="user-circle" class="w-10 h-10 mr-3 text-gray-400"></i>
