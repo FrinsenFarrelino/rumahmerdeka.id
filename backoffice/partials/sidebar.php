@@ -11,6 +11,10 @@
             <a href="dashboard.php?page=participants" class="flex items-center px-8 py-3 hover:bg-gray-700">
                 <i data-lucide="users" class="w-5 h-5 mr-3"></i> Peserta
             </a>
+            <!-- [UPDATE v2.0] Menu Pilih Unit -->
+            <a href="dashboard.php?page=pilih_unit" class="flex items-center px-8 py-3 hover:bg-gray-700">
+                <i data-lucide="key-round" class="w-5 h-5 mr-3"></i> Pilih Unit
+            </a>
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'superadmin'): ?>
                 <!-- [UPDATE v1.8] Link ke Dashboard Status -->
                 <a href="dashboard.php?page=status_dashboard" class="flex items-center px-8 py-3 hover:bg-gray-700">

@@ -57,3 +57,19 @@ CREATE TABLE IF NOT EXISTS `admin_users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- TABEL BARU UNTUK STOK UNIT
+CREATE TABLE IF NOT EXISTS `unit_stock` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `blok` varchar(10) NOT NULL,
+  `no_unit` varchar(20) NOT NULL,
+  `tipe` varchar(50) NOT NULL,
+  `lt_lb` varchar(20) NOT NULL COMMENT 'Luas Tanah / Luas Bangunan',
+  `status_unit` varchar(100) NOT NULL,
+  `id_pendaftar` int(11) DEFAULT NULL COMMENT 'FK ke tabel pendaftar',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `no_unit` (`no_unit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- MENGUBAH TABEL PENDAFTAR
+-- Cek jika kolom belum ada sebelum menambahkan
+ALTER TABLE `pendaftar` ADD COLUMN IF NOT EXISTS `id_unit` INT(11) DEFAULT NULL AFTER `status_data`;

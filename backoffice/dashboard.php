@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: index.php');
     exit;
@@ -8,13 +7,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 $page = $_GET['page'] ?? 'participants';
 
-// [UPDATE v1.8] Menambahkan 'status_dashboard' ke dalam array.
+// [UPDATE v2.0] Menambahkan 'pilih_unit' ke dalam array.
 $allowed_pages = [
     'analytics',
     'participants',
     'counters',
     'edit_participant',
-    'status_dashboard' // <-- INI PERUBAHANNYA
+    'status_dashboard',
+    'pilih_unit' // <-- INI PERUBAHANNYA
 ];
 
 if (!in_array($page, $allowed_pages)) {
