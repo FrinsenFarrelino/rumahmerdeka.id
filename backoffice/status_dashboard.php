@@ -30,7 +30,7 @@ $result = $conn->query($sql);
 // Opsi status yang mungkin ada
 $status_proses_options = [
     'Proses BI Checking', 'Reject BI Checking', 'Pemberkasan', 'Pengajuan Kredit Bank',
-    'Terbit SP3K', 'Reject Bank', 'Siap AKAD', 'Sudah AKAD'
+    'Terbit SP3K', 'Reject Bank', 'Siap AKAD', 'Sudah AKAD', 'Batal'
 ];
 
 // Inisialisasi semua status dengan 0
