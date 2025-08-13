@@ -22,10 +22,10 @@ if ($result->num_rows === 0) {
 $participant = $result->fetch_assoc();
 $stmt->close();
 
-// Opsi untuk dropdown
+// [UPDATE v2.3] Menambahkan 'Batal' ke opsi status
 $status_proses_options = [
     'Proses BI Checking', 'Reject BI Checking', 'Pemberkasan', 'Pengajuan Kredit Bank',
-    'Terbit SP3K', 'Reject Bank', 'Siap AKAD', 'Sudah AKAD'
+    'Terbit SP3K', 'Reject Bank', 'Siap AKAD', 'Sudah AKAD', 'Batal'
 ];
 $status_data_options = ['active', 'inactive'];
 $status_perkawinan_options = ['lajang', 'menikah'];
@@ -88,6 +88,11 @@ $is_partially_editable = ($user_role === 'adminRMP');
                 <div class="md:col-span-2">
                     <label for="slik_bi_checking" class="block font-semibold mb-1">Catatan SLIK / BI Checking</label>
                     <textarea id="slik_bi_checking" name="slik_bi_checking" rows="4" class="w-full p-3 border border-gray-300 rounded-lg"><?php echo htmlspecialchars($participant['slik_bi_checking'] ?? ''); ?></textarea>
+                </div>
+                <!-- [UPDATE v2.3] Field Catatan Batal -->
+                <div id="catatan-batal-container" class="md:col-span-2 hidden">
+                    <label for="catatan_batal" class="block font-semibold mb-1 text-red-600">Catatan Alasan Batal (Wajib diisi jika status "Batal")</label>
+                    <textarea id="catatan_batal" name="catatan_batal" rows="4" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-200"><?php echo htmlspecialchars($participant['catatan_batal'] ?? ''); ?></textarea>
                 </div>
                 <div>
                     <label for="path_sikasep_1" class="block font-semibold mb-1">Upload SIKASEP (File 1)</label>
@@ -188,5 +193,29 @@ $is_partially_editable = ($user_role === 'adminRMP');
     </div>
     <?php endif; ?>
 </form>
+<!-- [UPDATE v2.3] JavaScript untuk menampilkan/menyembunyikan field catatan batal -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const statusProsesSelect = document.getElementById('status_proses');
+    const catatanBatalContainer = document.getElementById('catatan-batal-container');
+    const catatanBatalTextarea = document.getElementById('catatan_batal');
+
+    const toggleCatatanBatal = () => {
+        if (statusProsesSelect.value === 'Batal') {
+            catatanBatalContainer.classList.remove('hidden');
+            catatanBatalTextarea.required = true;
+        } else {
+            catatanBatalContainer.classList.add('hidden');
+            catatanBatalTextarea.required = false;
+        }
+    };
+
+    // Panggil saat halaman dimuat
+    toggleCatatanBatal();
+
+    // Panggil saat nilai dropdown berubah
+    statusProsesSelect.addEventListener('change', toggleCatatanBatal);
+});
+</script>
 
 <?php $conn->close(); ?>

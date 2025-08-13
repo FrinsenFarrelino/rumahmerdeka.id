@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS db_rumah_merdeka;
 USE db_rumah_merdeka;
 
--- Tabel untuk menyimpan data pendaftar program
+-- TABEL LENGKAP (UNTUK REFERENSI)
 CREATE TABLE IF NOT EXISTS `pendaftar` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama_karyawan` varchar(255) NOT NULL,
@@ -20,19 +20,13 @@ CREATE TABLE IF NOT EXISTS `pendaftar` (
   `alamat_pasangan` text DEFAULT NULL,
   `path_ktp_pasangan` varchar(255) DEFAULT NULL,
   `tanggal_daftar` timestamp NOT NULL DEFAULT current_timestamp(),
-  
-  -- [KOLOM BARU v1.2] --
   `path_sikasep_1` varchar(255) DEFAULT NULL,
   `path_sikasep_2` varchar(255) DEFAULT NULL,
   `slik_bi_checking` text DEFAULT NULL,
-  `status_proses` enum(
-      '', 'Proses BI Checking', 'Reject BI Checking', 'Pemberkasan', 
-      'Pengajuan Kredit Bank', 'Terbit SP3K', 'Reject Bank', 
-      'Siap AKAD', 'Sudah AKAD'
-  ) NOT NULL DEFAULT '',
+  `status_proses` enum('', 'Proses BI Checking', 'Reject BI Checking', 'Pemberkasan', 'Pengajuan Kredit Bank', 'Terbit SP3K', 'Reject Bank', 'Siap AKAD', 'Sudah AKAD', 'Batal') DEFAULT '',
   `status_data` enum('active','inactive') NOT NULL DEFAULT 'active',
-  ------------------------
-
+  `id_unit` int(11) DEFAULT NULL,
+  `catatan_batal` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nik_karyawan` (`nik_karyawan`),
   UNIQUE KEY `nomor_induk_karyawan` (`nomor_induk_karyawan`),
@@ -73,3 +67,12 @@ CREATE TABLE IF NOT EXISTS `unit_stock` (
 -- MENGUBAH TABEL PENDAFTAR
 -- Cek jika kolom belum ada sebelum menambahkan
 ALTER TABLE `pendaftar` ADD COLUMN IF NOT EXISTS `id_unit` INT(11) DEFAULT NULL AFTER `status_data`;
+
+-- MENGUBAH TABEL PENDAFTAR
+-- Menambahkan kolom baru untuk catatan pembatalan
+ALTER TABLE `pendaftar` ADD COLUMN IF NOT EXISTS `catatan_batal` TEXT DEFAULT NULL AFTER `id_unit`;
+-- Memodifikasi kolom enum 'status_proses' untuk menambahkan 'Batal'
+ALTER TABLE `pendaftar` MODIFY COLUMN `status_proses` ENUM(
+    '', 'Proses BI Checking', 'Reject BI Checking', 'Pemberkasan', 'Pengajuan Kredit Bank',
+    'Terbit SP3K', 'Reject Bank', 'Siap AKAD', 'Sudah AKAD', 'Batal'
+) DEFAULT '';

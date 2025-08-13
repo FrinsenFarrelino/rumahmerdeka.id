@@ -42,11 +42,53 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $id = $_POST['id'];
+$status_proses = $_POST['status_proses'];
+$catatan_batal = ($status_proses === 'Batal') ? trim($_POST['catatan_batal']) : null;
+
+// [UPDATE v2.3] Validasi catatan batal
+if ($status_proses === 'Batal' && empty($catatan_batal)) {
+    header('Location: dashboard.php?page=edit_participant&id=' . $id . '&error=Catatan alasan batal wajib diisi jika status proses adalah Batal.');
+    exit;
+}
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if ($conn->connect_error) {
     header('Location: dashboard.php?page=edit_participant&id=' . $id . '&error=Koneksi DB gagal');
     exit;
+}
+
+// [UPDATE v2.3] Jika status diubah menjadi Batal, lepaskan unit yang terkait
+if ($status_proses === 'Batal') {
+    $conn->begin_transaction();
+    try {
+        // Ambil id_unit pendaftar
+        $stmt_get_unit = $conn->prepare("SELECT id_unit FROM pendaftar WHERE id = ?");
+        $stmt_get_unit->bind_param("i", $id);
+        $stmt_get_unit->execute();
+        $unit_data = $stmt_get_unit->get_result()->fetch_assoc();
+        $stmt_get_unit->close();
+        
+        if ($unit_data && !empty($unit_data['id_unit'])) {
+            $unit_id = $unit_data['id_unit'];
+            // Lepaskan unit
+            $stmt_release = $conn->prepare("UPDATE unit_stock SET id_pendaftar = NULL WHERE id = ?");
+            $stmt_release->bind_param("i", $unit_id);
+            $stmt_release->execute();
+            $stmt_release->close();
+            
+            // Hapus id_unit dari pendaftar
+            $stmt_unassign = $conn->prepare("UPDATE pendaftar SET id_unit = NULL WHERE id = ?");
+            $stmt_unassign->bind_param("i", $id);
+            $stmt_unassign->execute();
+            $stmt_unassign->close();
+        }
+        $conn->commit();
+        // Lanjutkan ke proses update utama
+    } catch (Exception $e) {
+        $conn->rollback();
+        header('Location: dashboard.php?page=edit_participant&id=' . $id . '&error=Gagal melepaskan unit: ' . $e->getMessage());
+        exit;
+    }
 }
 
 // Ambil path file saat ini sebelum update
@@ -103,6 +145,7 @@ if ($user_role === 'superadmin') {
         'path_sikasep_2' => $path_sikasep_2,
         'path_ktp_karyawan' => $path_ktp_karyawan,
         'path_ktp_pasangan' => $path_ktp_pasangan,
+        'catatan_batal' => $catatan_batal,
         'id' => $id
     ];
     
@@ -112,16 +155,16 @@ if ($user_role === 'superadmin') {
                 nama_pasangan = ?, nik_pasangan = ?, no_hp_pasangan = ?, email_pasangan = ?, alamat_pasangan = ?, 
                 slik_bi_checking = ?, status_proses = ?, status_data = ?, 
                 path_sikasep_1 = ?, path_sikasep_2 = ?,
-                path_ktp_karyawan = ?, path_ktp_pasangan = ?
+                path_ktp_karyawan = ?, path_ktp_pasangan = ?, catatan_batal = ?
             WHERE id = ?";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssssssssssssi", 
+    $stmt->bind_param("sssssssssssssssssssssi", 
         $data['nama_karyawan'], $data['nik_karyawan'], $data['nomor_induk_karyawan'], $data['no_hp_karyawan'], 
         $data['email_karyawan'], $data['alamat_karyawan'], $data['status_perkawinan'], $data['penghasilan_sesuai'],
         $data['nama_pasangan'], $data['nik_pasangan'], $data['no_hp_pasangan'], $data['email_pasangan'], 
         $data['alamat_pasangan'], $data['slik_bi_checking'], $data['status_proses'], $data['status_data'], 
-        $data['path_sikasep_1'], $data['path_sikasep_2'], $data['path_ktp_karyawan'], $data['path_ktp_pasangan'],
+        $data['path_sikasep_1'], $data['path_sikasep_2'], $data['path_ktp_karyawan'], $data['path_ktp_pasangan'], $data['catatan_batal'],
         $data['id']  // Keep this as the last parameter (for the WHERE clause)
     );
 
@@ -133,18 +176,19 @@ if ($user_role === 'superadmin') {
         'status_data' => 'active', // Paksa status data tetap active
         'path_sikasep_1' => $path_sikasep_1,
         'path_sikasep_2' => $path_sikasep_2,
+        'catatan_batal' => $catatan_batal,
         'id' => $id
     ];
 
     $sql = "UPDATE pendaftar SET 
                 slik_bi_checking = ?, status_proses = ?, status_data = ?, 
-                path_sikasep_1 = ?, path_sikasep_2 = ?
+                path_sikasep_1 = ?, path_sikasep_2 = ?, catatan_batal = ?
             WHERE id = ?";
             
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi",
+    $stmt->bind_param("sssssssi",
         $data['slik_bi_checking'], $data['status_proses'], $data['status_data'],
-        $data['path_sikasep_1'], $data['path_sikasep_2'], $data['id']
+        $data['path_sikasep_1'], $data['path_sikasep_2'], $data['catatan_batal'], $data['id']
     );
 }
 
