@@ -96,7 +96,6 @@ $stmt = $conn->prepare("SELECT nik_karyawan, nik_pasangan, path_ktp_karyawan, pa
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $current_data = $stmt->get_result()->fetch_assoc();
-$stmt->close();
 
 if (!$current_data) {
      header('Location: dashboard.php?page=edit_participant&id=' . $id . '&error=Data tidak ditemukan');
@@ -186,7 +185,7 @@ if ($user_role === 'superadmin') {
             WHERE id = ?";
             
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssi",
+    $stmt->bind_param("ssssssi",
         $data['slik_bi_checking'], $data['status_proses'], $data['status_data'],
         $data['path_sikasep_1'], $data['path_sikasep_2'], $data['catatan_batal'], $data['id']
     );
