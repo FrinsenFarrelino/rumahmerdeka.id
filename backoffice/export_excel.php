@@ -26,17 +26,17 @@ $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle('Data Peserta');
 
 // 4. Menambahkan Judul dan Tanggal
-$sheet->mergeCells('A1:T1')->setCellValue('A1', 'Data Peserta Program Rumah Merdeka');
+$sheet->mergeCells('A1:U1')->setCellValue('A1', 'Data Peserta Program Rumah Merdeka');
 $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
 $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-$sheet->mergeCells('A2:T2')->setCellValue('A2', 'Dokumen dibuat pada: ' . date('d F Y, H:i:s'));
+$sheet->mergeCells('A2:U2')->setCellValue('A2', 'Dokumen dibuat pada: ' . date('d F Y, H:i:s'));
 $sheet->getStyle('A2')->getFont()->setItalic(true);
 $sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 // 5. Menulis Header Tabel
 $headers = [
-    'Nama Karyawan', 'NIK Karyawan', 'NIP', 'Email Karyawan', 'No. HP Karyawan', 'Alamat Karyawan',
+    'Nama Karyawan', 'NIK Karyawan', 'Nama Perusahaan', 'NIP', 'Email Karyawan', 'No. HP Karyawan', 'Alamat Karyawan',
     'Status Perkawinan', 'Penghasilan Sesuai',
     'Nama Pasangan', 'NIK Pasangan', 'Email Pasangan', 'No. HP Pasangan', 'Alamat Pasangan',
     'KTP Karyawan', 'KTP Pasangan', 'SIKASEP FILE 1', 'SIKASEP FILE 2', 'SLIK / BI Checking', 'Status Proses', 'Status Data'
@@ -49,7 +49,7 @@ $headerStyle = [
     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '1E8449']],
     'alignment' => ['vertical' => Alignment::VERTICAL_CENTER, 'horizontal' => Alignment::HORIZONTAL_CENTER, 'wrapText' => true]
 ];
-$sheet->getStyle('A4:T4')->applyFromArray($headerStyle);
+$sheet->getStyle('A4:U4')->applyFromArray($headerStyle);
 $sheet->getRowDimension(4)->setRowHeight(25);
 
 // 6. Menulis Data dan Menyisipkan Gambar
@@ -59,27 +59,28 @@ $imageHeight = 90; // Tinggi gambar dalam piksel
 while($row = $result->fetch_assoc()) {
     // [FIX] Menyesuaikan tinggi baris dan perataan vertikal
     $sheet->getRowDimension($rowNum)->setRowHeight($imageHeight + 5);
-    $sheet->getStyle('A'.$rowNum.':T'.$rowNum)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-    $sheet->getStyle('A'.$rowNum.':M'.$rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT); // Rata kiri untuk teks
-    $sheet->getStyle('R'.$rowNum.':T'.$rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT); // Rata kiri untuk teks
+    $sheet->getStyle('A'.$rowNum.':U'.$rowNum)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+    $sheet->getStyle('A'.$rowNum.':N'.$rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT); // Rata kiri untuk teks
+    $sheet->getStyle('R'.$rowNum.':U'.$rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT); // Rata kiri untuk teks
 
     // [FIX] Menulis data sel per sel untuk kontrol format
     $sheet->setCellValue('A' . $rowNum, $row['nama_karyawan']);
     // Menggunakan setCellValueExplicit untuk memaksa NIK/NIP menjadi Teks
     $sheet->setCellValueExplicit('B' . $rowNum, $row['nik_karyawan'], DataType::TYPE_STRING);
-    $sheet->setCellValueExplicit('C' . $rowNum, $row['nomor_induk_karyawan'], DataType::TYPE_STRING);
-    $sheet->setCellValue('D' . $rowNum, $row['email_karyawan']);
-    $sheet->setCellValue('E' . $rowNum, $row['no_hp_karyawan']);
-    $sheet->setCellValue('F' . $rowNum, $row['alamat_karyawan']);
-    $sheet->setCellValue('G' . $rowNum, ucfirst($row['status_perkawinan']));
-    $sheet->setCellValue('H' . $rowNum, ucfirst($row['penghasilan_sesuai']));
+    $sheet->setCellValueExplicit('C' . $rowNum, $row['nama_perusahaan'], DataType::TYPE_STRING);
+    $sheet->setCellValueExplicit('D' . $rowNum, $row['nomor_induk_karyawan'], DataType::TYPE_STRING);
+    $sheet->setCellValue('E' . $rowNum, $row['email_karyawan']);
+    $sheet->setCellValue('F' . $rowNum, $row['no_hp_karyawan']);
+    $sheet->setCellValue('G' . $rowNum, $row['alamat_karyawan']);
+    $sheet->setCellValue('H' . $rowNum, ucfirst($row['status_perkawinan']));
+    $sheet->setCellValue('I' . $rowNum, ucfirst($row['penghasilan_sesuai']));
     
     // Data Pasangan
-    $sheet->setCellValue('I' . $rowNum, $row['nama_pasangan'] ?? '-');
-    $sheet->setCellValueExplicit('J' . $rowNum, $row['nik_pasangan'] ?? '-', DataType::TYPE_STRING);
-    $sheet->setCellValue('K' . $rowNum, $row['email_pasangan'] ?? '-');
-    $sheet->setCellValue('L' . $rowNum, $row['no_hp_pasangan'] ?? '-');
-    $sheet->setCellValue('M' . $rowNum, $row['alamat_pasangan'] ?? '-');
+    $sheet->setCellValue('J' . $rowNum, $row['nama_pasangan'] ?? '-');
+    $sheet->setCellValueExplicit('K' . $rowNum, $row['nik_pasangan'] ?? '-', DataType::TYPE_STRING);
+    $sheet->setCellValue('L' . $rowNum, $row['email_pasangan'] ?? '-');
+    $sheet->setCellValue('M' . $rowNum, $row['no_hp_pasangan'] ?? '-');
+    $sheet->setCellValue('N' . $rowNum, $row['alamat_pasangan'] ?? '-');
 
     // [FIX] Menyisipkan gambar KTP Karyawan
     $path_ktp_karyawan = '../' . $row['path_ktp_karyawan'];
@@ -87,14 +88,14 @@ while($row = $result->fetch_assoc()) {
         $drawing = new Drawing();
         $drawing->setName('KTP Karyawan');
         $drawing->setPath($path_ktp_karyawan);
-        $drawing->setCoordinates('N' . $rowNum);
+        $drawing->setCoordinates('O' . $rowNum);
         $drawing->setHeight($imageHeight); // Atur tinggi
         // Lebar akan disesuaikan otomatis untuk menjaga rasio aspek
         $drawing->setOffsetX(5);
         $drawing->setOffsetY(5);
         $drawing->setWorksheet($sheet);
     } else {
-        $sheet->setCellValue('N' . $rowNum, 'File tidak ditemukan');
+        $sheet->setCellValue('O' . $rowNum, 'File tidak ditemukan');
     }
 
     // [FIX] Menyisipkan gambar KTP Pasangan
@@ -104,16 +105,16 @@ while($row = $result->fetch_assoc()) {
             $drawing_pasangan = new Drawing();
             $drawing_pasangan->setName('KTP Pasangan');
             $drawing_pasangan->setPath($path_ktp_pasangan);
-            $drawing_pasangan->setCoordinates('O' . $rowNum);
+            $drawing_pasangan->setCoordinates('P' . $rowNum);
             $drawing_pasangan->setHeight($imageHeight); // Atur tinggi
             $drawing_pasangan->setOffsetX(5);
             $drawing_pasangan->setOffsetY(5);
             $drawing_pasangan->setWorksheet($sheet);
         } else {
-            $sheet->setCellValue('O' . $rowNum, 'File tidak ditemukan');
+            $sheet->setCellValue('P' . $rowNum, 'File tidak ditemukan');
         }
     } else {
-        $sheet->setCellValue('O' . $rowNum, '-');
+        $sheet->setCellValue('P' . $rowNum, '-');
     }
 
     // [FIX] Menyisipkan gambar SIKASEP 1
@@ -123,26 +124,6 @@ while($row = $result->fetch_assoc()) {
             $drawing = new Drawing();
             $drawing->setName('SIKASEP FILE 1');
             $drawing->setPath($path_sikasep_1);
-            $drawing->setCoordinates('P' . $rowNum);
-            $drawing->setHeight($imageHeight); // Atur tinggi
-            // Lebar akan disesuaikan otomatis untuk menjaga rasio aspek
-            $drawing->setOffsetX(5);
-            $drawing->setOffsetY(5);
-            $drawing->setWorksheet($sheet);
-        } else {
-            $sheet->setCellValue('P' . $rowNum, 'File tidak ditemukan');
-        }
-    } else {
-        $sheet->setCellValue('P' . $rowNum, '-');
-    }
-
-    // [FIX] Menyisipkan gambar SIKASEP 2
-    if (!empty($row['path_sikasep_2'])) {
-        $path_sikasep_2 = '../' . $row['path_sikasep_2'];
-        if (file_exists($path_sikasep_2)) {
-            $drawing = new Drawing();
-            $drawing->setName('SIKASEP FILE 2');
-            $drawing->setPath($path_sikasep_2);
             $drawing->setCoordinates('Q' . $rowNum);
             $drawing->setHeight($imageHeight); // Atur tinggi
             // Lebar akan disesuaikan otomatis untuk menjaga rasio aspek
@@ -156,25 +137,45 @@ while($row = $result->fetch_assoc()) {
         $sheet->setCellValue('Q' . $rowNum, '-');
     }
 
-    $sheet->setCellValue('R' . $rowNum, $row['slik_bi_checking'] ?? '-');
-    $sheet->setCellValue('S' . $rowNum, $row['status_proses'] ?? '-');
-    $sheet->setCellValue('T' . $rowNum, ucfirst($row['status_data']) ?? '-');
+    // [FIX] Menyisipkan gambar SIKASEP 2
+    if (!empty($row['path_sikasep_2'])) {
+        $path_sikasep_2 = '../' . $row['path_sikasep_2'];
+        if (file_exists($path_sikasep_2)) {
+            $drawing = new Drawing();
+            $drawing->setName('SIKASEP FILE 2');
+            $drawing->setPath($path_sikasep_2);
+            $drawing->setCoordinates('R' . $rowNum);
+            $drawing->setHeight($imageHeight); // Atur tinggi
+            // Lebar akan disesuaikan otomatis untuk menjaga rasio aspek
+            $drawing->setOffsetX(5);
+            $drawing->setOffsetY(5);
+            $drawing->setWorksheet($sheet);
+        } else {
+            $sheet->setCellValue('R' . $rowNum, 'File tidak ditemukan');
+        }
+    } else {
+        $sheet->setCellValue('R' . $rowNum, '-');
+    }
+
+    $sheet->setCellValue('S' . $rowNum, $row['slik_bi_checking'] ?? '-');
+    $sheet->setCellValue('T' . $rowNum, $row['status_proses'] ?? '-');
+    $sheet->setCellValue('U' . $rowNum, ucfirst($row['status_data']) ?? '-');
     
     $rowNum++;
 }
 
 // 7. Mengatur Lebar Kolom
-foreach (range('A', 'T') as $columnID) {
-    if ($columnID != 'F' && $columnID != 'M') { // Jangan auto-size kolom alamat
+foreach (range('A', 'U') as $columnID) {
+    if ($columnID != 'G' && $columnID != 'N') { // Jangan auto-size kolom alamat
         $sheet->getColumnDimension($columnID)->setAutoSize(true);
     }
 }
-$sheet->getColumnDimension('F')->setWidth(40); // Lebar tetap untuk alamat karyawan
-$sheet->getColumnDimension('M')->setWidth(40); // Lebar tetap untuk alamat pasangan
-$sheet->getColumnDimension('N')->setWidth(25); // [FIX] Lebar kolom gambar Karyawan
-$sheet->getColumnDimension('O')->setWidth(25); // [FIX] Lebar kolom gambar Pasangan
-$sheet->getColumnDimension('P')->setWidth(25); // [FIX] Lebar kolom gambar SIKASEP 1
-$sheet->getColumnDimension('Q')->setWidth(25); // [FIX] Lebar kolom gambar SIKASEP 2
+$sheet->getColumnDimension('G')->setWidth(40); // Lebar tetap untuk alamat karyawan
+$sheet->getColumnDimension('N')->setWidth(40); // Lebar tetap untuk alamat pasangan
+$sheet->getColumnDimension('O')->setWidth(25); // [FIX] Lebar kolom gambar Karyawan
+$sheet->getColumnDimension('P')->setWidth(25); // [FIX] Lebar kolom gambar Pasangan
+$sheet->getColumnDimension('Q')->setWidth(25); // [FIX] Lebar kolom gambar SIKASEP 1
+$sheet->getColumnDimension('R')->setWidth(25); // [FIX] Lebar kolom gambar SIKASEP 2
 
 
 // 8. Mengirim File ke Browser

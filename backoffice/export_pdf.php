@@ -61,7 +61,7 @@ $html .= '<tbody>';
 while ($row = $result->fetch_assoc()) {
     $html .= '<tr nobr="true">';
     // Info Karyawan, Kontak, Status
-    $html .= '<td style="vertical-align: top;"><b>' . htmlspecialchars($row['nama_karyawan']) . '</b><br><small>NIK: ' . htmlspecialchars($row['nik_karyawan']) . '</small><br><small>NIP: ' . htmlspecialchars($row['nomor_induk_karyawan']) . '</small></td>';
+    $html .= '<td style="vertical-align: top;"><b>' . htmlspecialchars($row['nama_karyawan']) . '</b><br><small>NIK: ' . htmlspecialchars($row['nik_karyawan']) . '</small><br><small>NIP: ' . htmlspecialchars($row['nomor_induk_karyawan']) . '</small><br><small>Nama Perusahaan : ' . htmlspecialchars($row['nama_perusahaan']) . '</small></td>';
     $html .= '<td style="vertical-align: top;">' . htmlspecialchars($row['email_karyawan']) . '<br>' . htmlspecialchars($row['no_hp_karyawan']) . '<br><small>' . htmlspecialchars($row['alamat_karyawan']) . '</small></td>';
     $html .= '<td style="vertical-align: top;">' . ucfirst($row['status_perkawinan']) . '<br><small>Gaji: ' . ucfirst($row['penghasilan_sesuai']) . '</small></td>';
     
