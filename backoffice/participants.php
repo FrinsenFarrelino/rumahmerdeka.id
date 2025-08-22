@@ -74,6 +74,10 @@ $status_data_options = ['active', 'inactive'];
                 <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Info Karyawan
                 </th>
+                <!-- [UPDATE v2.4] Header kolom baru -->
+                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Perusahaan
+                </th>
                 <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Kontak & Alamat Karyawan
                 </th>
@@ -114,6 +118,10 @@ $status_data_options = ['active', 'inactive'];
                             <p class="text-gray-900 font-bold whitespace-no-wrap"><?php echo htmlspecialchars($row['nama_karyawan']); ?></p>
                             <p class="text-gray-600 whitespace-no-wrap">NIK: <?php echo htmlspecialchars($row['nik_karyawan']); ?></p>
                             <p class="text-gray-600 whitespace-no-wrap">NIP: <?php echo htmlspecialchars($row['nomor_induk_karyawan']); ?></p>
+                        </td>
+                        <!-- [UPDATE v2.4] Tampilkan data nama perusahaan -->
+                        <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm align-top">
+                            <p class="text-gray-900 font-semibold whitespace-no-wrap"><?php echo htmlspecialchars($row['nama_perusahaan']); ?></p>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm align-top">
                             <p class="text-gray-900 whitespace-no-wrap"><?php echo ($row['email_karyawan']); ?></p>
@@ -211,7 +219,7 @@ $status_data_options = ['active', 'inactive'];
                 <?php endwhile; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="11" class="text-center py-10 text-gray-500">
+                    <td colspan="12" class="text-center py-10 text-gray-500">
                         Belum ada data peserta yang terdaftar.
                     </td>
                 </tr>

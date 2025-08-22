@@ -56,6 +56,8 @@ if ($conn->connect_error) {
 // Data Karyawan
 $nama_karyawan = trim($_POST['nama_karyawan'] ?? '');
 $nik_karyawan = trim($_POST['nik_karyawan'] ?? '');
+// [UPDATE v2.4] Ambil data nama perusahaan
+$nama_perusahaan = trim($_POST['nama_perusahaan'] ?? '');
 $nomor_induk_karyawan = trim($_POST['nomor_induk_karyawan'] ?? '');
 $no_hp_karyawan = trim($_POST['no_hp_karyawan'] ?? '');
 $email_karyawan = filter_var(trim($_POST['email_karyawan'] ?? ''), FILTER_SANITIZE_EMAIL);
@@ -64,7 +66,8 @@ $status_perkawinan = trim($_POST['status_perkawinan'] ?? '');
 $penghasilan_sesuai = trim($_POST['penghasilan_sesuai'] ?? '');
 
 // Validasi Data Wajib Karyawan
-if (empty($nama_karyawan) || empty($nik_karyawan) || empty($nomor_induk_karyawan) || empty($no_hp_karyawan) || empty($alamat_karyawan) || empty($status_perkawinan) || empty($penghasilan_sesuai)) {
+// [UPDATE v2.4] Tambahkan validasi nama perusahaan
+if (empty($nama_karyawan) || empty($nik_karyawan) || empty($nama_perusahaan) || empty($nomor_induk_karyawan) || empty($no_hp_karyawan) || empty($alamat_karyawan) || empty($status_perkawinan) || empty($penghasilan_sesuai)) {
     send_response('error', 'Semua data karyawan wajib diisi.');
 }
 if (!preg_match('/^[0-9]{16}$/', $nik_karyawan)) {
@@ -108,15 +111,17 @@ if ($status_perkawinan === 'menikah') {
 }
 
 // Insert ke Database
-$sql = "INSERT INTO pendaftar (nama_karyawan, nik_karyawan, nomor_induk_karyawan, no_hp_karyawan, email_karyawan, alamat_karyawan, path_ktp_karyawan, status_perkawinan, penghasilan_sesuai, nama_pasangan, nik_pasangan, no_hp_pasangan, email_pasangan, alamat_pasangan, path_ktp_pasangan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+// [UPDATE v2.4] Insert ke Database dengan kolom baru
+$sql = "INSERT INTO pendaftar (nama_karyawan, nik_karyawan, nomor_induk_karyawan, nama_perusahaan, no_hp_karyawan, email_karyawan, alamat_karyawan, path_ktp_karyawan, status_perkawinan, penghasilan_sesuai, nama_pasangan, nik_pasangan, no_hp_pasangan, email_pasangan, alamat_pasangan, path_ktp_pasangan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     send_response('error', 'Gagal menyiapkan statement database: ' . $conn->error);
 }
 
-$stmt->bind_param("sssssssssssssss", 
-    $nama_karyawan, $nik_karyawan, $nomor_induk_karyawan, $no_hp_karyawan, $email_karyawan, $alamat_karyawan, $path_ktp_karyawan, 
+// [UPDATE v2.4] Tambahkan bind_param untuk nama_perusahaan
+$stmt->bind_param("ssssssssssssssss", 
+    $nama_karyawan, $nik_karyawan, $nomor_induk_karyawan, $nama_perusahaan, $no_hp_karyawan, $email_karyawan, $alamat_karyawan, $path_ktp_karyawan, 
     $status_perkawinan, $penghasilan_sesuai, 
     $nama_pasangan, $nik_pasangan, $no_hp_pasangan, $email_pasangan, $alamat_pasangan, $path_ktp_pasangan
 );

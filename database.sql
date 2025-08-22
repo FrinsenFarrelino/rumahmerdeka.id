@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `pendaftar` (
   `nama_karyawan` varchar(255) NOT NULL,
   `nik_karyawan` varchar(16) NOT NULL,
   `nomor_induk_karyawan` varchar(100) NOT NULL,
+  `nama_perusahaan` varchar(255) NOT NULL,
   `no_hp_karyawan` varchar(20) NOT NULL,
   `email_karyawan` varchar(255) DEFAULT NULL,
   `alamat_karyawan` text NOT NULL,

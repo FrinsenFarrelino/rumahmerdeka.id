@@ -126,6 +126,7 @@ if ($user_role === 'superadmin') {
     $data = [
         'nama_karyawan' => $_POST['nama_karyawan'],
         'nik_karyawan' => $_POST['nik_karyawan'],
+        'nama_perusahaan' => $_POST['nama_perusahaan'],
         'nomor_induk_karyawan' => $_POST['nomor_induk_karyawan'],
         'no_hp_karyawan' => $_POST['no_hp_karyawan'],
         'email_karyawan' => $_POST['email_karyawan'],
@@ -149,7 +150,7 @@ if ($user_role === 'superadmin') {
     ];
     
     $sql = "UPDATE pendaftar SET 
-                nama_karyawan = ?, nik_karyawan = ?, nomor_induk_karyawan = ?, no_hp_karyawan = ?, email_karyawan = ?, alamat_karyawan = ?, 
+                nama_karyawan = ?, nik_karyawan = ?, nama_perusahaan = ?, nomor_induk_karyawan = ?, no_hp_karyawan = ?, email_karyawan = ?, alamat_karyawan = ?, 
                 status_perkawinan = ?, penghasilan_sesuai = ?, 
                 nama_pasangan = ?, nik_pasangan = ?, no_hp_pasangan = ?, email_pasangan = ?, alamat_pasangan = ?, 
                 slik_bi_checking = ?, status_proses = ?, status_data = ?, 
@@ -158,8 +159,8 @@ if ($user_role === 'superadmin') {
             WHERE id = ?";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssssssssssssssssi", 
-        $data['nama_karyawan'], $data['nik_karyawan'], $data['nomor_induk_karyawan'], $data['no_hp_karyawan'], 
+    $stmt->bind_param("ssssssssssssssssssssssi", 
+        $data['nama_karyawan'], $data['nik_karyawan'], $data['nama_perusahaan'], $data['nomor_induk_karyawan'], $data['no_hp_karyawan'],
         $data['email_karyawan'], $data['alamat_karyawan'], $data['status_perkawinan'], $data['penghasilan_sesuai'],
         $data['nama_pasangan'], $data['nik_pasangan'], $data['no_hp_pasangan'], $data['email_pasangan'], 
         $data['alamat_pasangan'], $data['slik_bi_checking'], $data['status_proses'], $data['status_data'], 
